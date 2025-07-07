@@ -78,6 +78,7 @@ Translation keys:
 ```
 ActPriceHide/
 ├── composer.json
+├── LICENSE
 ├── README.md
 ├── src/
 │   ├── ActPriceHide.php
