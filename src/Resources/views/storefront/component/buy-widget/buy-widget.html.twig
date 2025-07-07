@@ -1,0 +1,18 @@
+{% sw_extends '@Storefront/storefront/component/buy-widget/buy-widget.html.twig' %}
+
+{% block buy_widget_buy_container %}
+    {% set hidePrice = false %}
+    
+    {# Check request attributes first (works for both normal and AJAX requests) #}
+    {% if app.request.attributes.get('hidePrice') and app.request.attributes.get('hidePrice').hide %}
+        {% set hidePrice = true %}
+    {# Fallback to page extension (for normal page loads) #}
+    {% elseif page.extensions.hidePrice is defined and page.extensions.hidePrice.hide %}
+        {% set hidePrice = true %}
+    {% endif %}
+    
+    {% if not hidePrice %}
+        {{ parent() }}
+    {% endif %}
+{% endblock %}
+

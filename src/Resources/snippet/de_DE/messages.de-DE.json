@@ -1,0 +1,12 @@
+{
+  "price-hide": {
+    "config": {
+      "cardTitle": "Konfiguration",
+      "customerGroupsLabel": "Kundengruppen für Preisanzeige"
+    }
+  },
+  "header": {
+    "priceHideInfoNotLoggedIn": "Damit Sie diese Seite in vollem Umfang nutzen können <a href='/account/login'>melden</a> Sie sich bitte an.",
+    "priceHideInfoNotAllowed": "Hinweis: Ihr Account wurde noch nicht freigeschaltet."
+  }
+}

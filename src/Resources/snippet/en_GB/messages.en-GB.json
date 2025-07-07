@@ -1,0 +1,13 @@
+{
+    "price-hide": {
+        "config": {
+            "cardTitle": "Configuration",
+            "customerGroupsLabel": "Customer groups to show prices"
+        }
+    },
+        "header": {
+            "priceHideInfo": "Prices are only shown after login.",
+                "priceHideInfoNotLoggedIn": "To fully utilize this page, please <a href='/account/login'>log in</a>.",
+                "priceHideInfoNotAllowed": "Your account is not activated."
+        }
+}

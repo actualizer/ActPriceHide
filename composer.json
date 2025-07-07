@@ -1,0 +1,32 @@
+{
+  "name": "act/price-hide",
+  "description": "Hide prices and cart access for non-logged-in users and specific customer groups",
+  "version": "1.0.1",
+  "type": "shopware-platform-plugin",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "ACT"
+    }
+  ],
+  "require": {
+        "php": ">=8.3",
+        "shopware/core": ">=6.6.10 <6.8.0"
+   },
+  "extra": {
+    "shopware-plugin-class": "Act\\PriceHide\\ActPriceHide",
+    "label": {
+      "de-DE": "Actualize: Preise und Warenkorb verstecken",
+      "en-GB": "Actualize: Hide Prices and Cart"
+    },
+    "description": {
+      "de-DE": "Versteckt Preise und Warenkorb-Zugriff für nicht eingeloggte Benutzer und spezifische Kundengruppen",
+      "en-GB": "Hides prices and cart access for non-logged-in users and specific customer groups"
+    }
+  },
+  "autoload": {
+    "psr-4": {
+      "Act\\PriceHide\\": "src/"
+    }
+  }
+}

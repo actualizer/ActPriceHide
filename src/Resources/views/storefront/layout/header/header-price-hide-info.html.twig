@@ -1,0 +1,13 @@
+{% if page.extensions.hidePrice.hide %}
+    <div class="act-header-price-hide-info d-flex align-items-center">
+        <div class="container-fluid">
+            <p class="act-header-price-hide-info-text mb-0">
+                {% if page.extensions.hidePrice.reason == 'not_logged_in' %}
+                    {{ "header.priceHideInfoNotLoggedIn"|trans|raw }}
+                {% elseif page.extensions.hidePrice.reason == 'not_allowed' %}
+                    {{ "header.priceHideInfoNotAllowed"|trans }}
+                {% endif %}
+            </p>
+        </div>
+    </div>
+{% endif %}

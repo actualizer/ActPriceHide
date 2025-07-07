@@ -1,0 +1,8 @@
+{# custom/plugins/ActPriceHide/src/Resources/views/storefront/base.html.twig #}
+
+{% sw_extends '@Storefront/storefront/base.html.twig' %}
+
+{% block base_header %}
+    {% sw_include '@ActPriceHide/storefront/layout/header/header-price-hide-info.html.twig' %}
+    {{ parent() }}
+{% endblock %}

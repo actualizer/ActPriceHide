@@ -1,0 +1,8 @@
+{% sw_extends '@Storefront/storefront/page/checkout/cart/index.html.twig' %}
+
+{% block base_head %}
+     {{ parent() }}
+    {% if redirectUrl is defined %}
+    <meta http-equiv="refresh" content="0;url={{ redirectUrl }}">
+    {% endif %}
+{% endblock %}
