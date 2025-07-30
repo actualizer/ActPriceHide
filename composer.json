@@ -1,7 +1,7 @@
 {
   "name": "act/price-hide",
   "description": "Hide prices and cart access for non-logged-in users and specific customer groups",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "type": "shopware-platform-plugin",
   "license": "MIT",
   "authors": [

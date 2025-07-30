@@ -70,6 +70,9 @@ class StorefrontRenderSubscriber implements EventSubscriberInterface
         
         $request->attributes->set('hidePrice', $hidePrice);
         
+        // Set as global template variable for Shopware 6.7.1+
+        $event->setParameter('hidePrice', new ArrayEntity($hidePrice));
+        
         // If the page is not available, we can't do anything.
         if ($page !== null) {
             $page->addExtension('hidePrice', new ArrayEntity($hidePrice));

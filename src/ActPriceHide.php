@@ -3,6 +3,7 @@
 namespace Act\PriceHide;
 
 use Act\PriceHide\Subscriber\StorefrontRenderSubscriber;
+use Act\PriceHide\Subscriber\HeaderDataSubscriber;
 use Shopware\Core\Framework\Plugin;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
@@ -13,6 +14,9 @@ class ActPriceHide extends Plugin
         parent::build($container);
 
         $container->autowire(StorefrontRenderSubscriber::class)
+            ->addTag('kernel.event_subscriber');
+            
+        $container->autowire(HeaderDataSubscriber::class)
             ->addTag('kernel.event_subscriber');
     }
 

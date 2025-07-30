@@ -2,7 +2,42 @@
 
 {% sw_extends '@Storefront/storefront/base.html.twig' %}
 
-{% block base_header %}
-    {% sw_include '@ActPriceHide/storefront/layout/header/header-price-hide-info.html.twig' %}
+{% block base_body_inner %}
+    <!-- ActPriceHide base.html.twig is loading -->
+    
+    {# Get hidePrice data #}
+    {% set hidePriceData = app.request.attributes.get('hidePrice') %}
+    
+    {% if hidePriceData and hidePriceData.hide %}
+        {# Get colors from plugin configuration #}
+        {% set backgroundColor = config('ActPriceHide.config.headerBackgroundColor') ?? '#17a2b8' %}
+        {% set textColor = config('ActPriceHide.config.headerTextColor') ?? '#ffffff' %}
+        
+        <div class="act-header-price-hide-info d-flex align-items-center" style="background-color: {{ backgroundColor }}; color: {{ textColor }}; border-bottom: 1px solid rgba(0,0,0,0.1); padding: 12px 0; width: 100%; position: relative; z-index: 1000;">
+            <div class="container">
+                <p class="act-header-price-hide-info-text mb-0 text-center" style="color: {{ textColor }}; margin: 0;">
+                    {% if hidePriceData.reason == 'not_logged_in' %}
+                        <span style="color: {{ textColor }};">{{ "header.priceHideInfoNotLoggedIn"|trans|raw }}</span>
+                    {% elseif hidePriceData.reason == 'not_allowed' %}
+                        <span style="color: {{ textColor }};">{{ "header.priceHideInfoNotAllowed"|trans }}</span>
+                    {% else %}
+                        <span style="color: {{ textColor }};">Please log in to see prices</span>
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+        
+        {# Add inline styles for links within the info bar #}
+        <style>
+            .act-header-price-hide-info a {
+                color: {{ textColor }} !important;
+                text-decoration: underline;
+            }
+            .act-header-price-hide-info a:hover {
+                opacity: 0.8;
+            }
+        </style>
+    {% endif %}
+    
     {{ parent() }}
 {% endblock %}

@@ -2,6 +2,13 @@
 
 A Shopware 6 plugin that provides advanced price visibility control and cart access management. Hide prices and restrict cart access for non-logged-in users or specific customer groups.
 
+## Version Compatibility
+
+| Plugin Version | Shopware Version | Branch | Download |
+|----------------|------------------|---------|----------|
+| 1.1.x | 6.7.1+ | main | [Latest Release](../../releases/latest) |
+| 1.0.x | 6.6.10 - 6.7.0 | [v1.0-maintenance](../../tree/v1.0-maintenance) | [v1.0.1](../../releases/tag/v1.0.1) |
+
 ## Features
 
 - ✅ Hide prices for non-logged-in users
@@ -11,12 +18,13 @@ A Shopware 6 plugin that provides advanced price visibility control and cart acc
 - ✅ Automatic redirect to login page on cart access
 - ✅ AJAX and normal page request compatibility
 - ✅ Multi-language support (German & English)
-- ✅ Compatible with Shopware 6.6.10 - 6.7.x
+- ✅ Compatible with Shopware 6.6.10 - 6.7.x (optimized for 6.7.1+)
 
 ## Requirements
 
 - Shopware 6.6.10 or higher (up to 6.7.x)
 - PHP 8.3 or higher
+- **Note**: Version 1.1.0+ recommended for Shopware 6.7.1+ due to improved template variable handling
 
 ## Installation
 
@@ -45,6 +53,11 @@ A Shopware 6 plugin that provides advanced price visibility control and cart acc
 5. **Login Redirect**: Automatically redirects users to login page when trying to access cart
 
 ## Technical Details
+
+### Architecture (v1.1.0+)
+- **Global Template Variables**: Uses Shopware's native template variable system for reliable data access
+- **Dual Compatibility**: Works with both 6.7.1+ global variables and legacy page.extensions
+- **HeaderDataSubscriber**: Dedicated subscriber for header-specific data injection
 
 ### Events Used
 - `StorefrontRenderEvent` - To inject price hiding logic into all storefront pages
@@ -100,10 +113,12 @@ ActPriceHide/
 │   │           │   └── product/
 │   │           ├── layout/
 │   │           │   └── header/
+│   │           │       └── header-price-hide-info.html.twig (updated for 6.7.1+)
 │   │           └── page/
 │   │               ├── checkout/
 │   │               └── product-detail/
 │   └── Subscriber/
+│       ├── HeaderDataSubscriber.php (new in v1.1.0)
 │       └── StorefrontRenderSubscriber.php
 ```
 
@@ -122,6 +137,8 @@ The plugin respects Shopware's logging configuration. Check your log files for a
 ## Compatibility
 
 - **Shopware Version**: 6.6.10 - 6.7.x
+  - v1.0.x: Best for Shopware 6.6.10 - 6.7.0
+  - v1.1.0+: Required for Shopware 6.7.1+ (improved template variable handling)
 - **PHP Version**: 8.3+
 - **Template Compatibility**: Uses Shopware 6.6+ template structure
 - **AJAX Support**: Full compatibility with AJAX requests

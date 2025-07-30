@@ -2,23 +2,48 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/shopware/platform/master/src/Core/System/SystemConfig/Schema/config.xsd">
     <card>
-        <title>Configuration</title>
+        <title lang="en-GB">Configuration</title>
         <title lang="de-DE">Konfiguration</title>
 
         <component name="sw-entity-multi-id-select">
             <name>customerGroups</name>
             <entity>customer_group</entity>
-            <label>Customer groups to show prices</label>
+            <label lang="en-GB">Customer groups to show prices</label>
             <label lang="de-DE">Kundengruppen für Preisanzeige</label>
         </component>
 
         <input-field type="bool">
             <name>debugMode</name>
-            <label>Enable debug mode</label>
+            <label lang="en-GB">Enable debug mode</label>
             <label lang="de-DE">Debug-Modus aktivieren</label>
-            <helpText>Enables additional debug output for development</helpText>
+            <helpText lang="en-GB">Enables additional debug output for development</helpText>
             <helpText lang="de-DE">Aktiviert zusätzliche Debug-Ausgaben für die Entwicklung</helpText>
             <defaultValue>false</defaultValue>
+        </input-field>
+    </card>
+    
+    <card>
+        <title lang="en-GB">Header Bar Styling</title>
+        <title lang="de-DE">Header-Leiste Styling</title>
+        
+        <input-field type="colorpicker">
+            <name>headerBackgroundColor</name>
+            <label lang="en-GB">Header bar background color</label>
+            <label lang="de-DE">Hintergrundfarbe der Header-Leiste</label>
+            <helpText lang="en-GB">Background color for the price hide information bar</helpText>
+            <helpText lang="de-DE">Hintergrundfarbe für die Preisausblendungs-Informationsleiste</helpText>
+            <defaultValue>#17a2b8</defaultValue>
+            <changeSet>theme.compile</changeSet>
+        </input-field>
+        
+        <input-field type="colorpicker">
+            <name>headerTextColor</name>
+            <label lang="en-GB">Header bar text color</label>
+            <label lang="de-DE">Textfarbe der Header-Leiste</label>
+            <helpText lang="en-GB">Text color for the price hide information bar</helpText>
+            <helpText lang="de-DE">Textfarbe für die Preisausblendungs-Informationsleiste</helpText>
+            <defaultValue>#ffffff</defaultValue>
+            <changeSet>theme.compile</changeSet>
         </input-field>
     </card>
 </config>

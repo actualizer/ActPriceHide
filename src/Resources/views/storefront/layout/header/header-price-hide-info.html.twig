@@ -1,11 +1,39 @@
-{% if page.extensions.hidePrice.hide %}
-    <div class="act-header-price-hide-info d-flex align-items-center">
+{# Always show a test div to check if template is loading #}
+<div style="background-color: red; color: white; padding: 5px; text-align: center;">
+    ActPriceHide Template Loading Test
+</div>
+
+{# Debug output #}
+<!-- Debug START -->
+<!-- hidePrice defined: {{ hidePrice is defined ? 'yes' : 'no' }} -->
+<!-- page defined: {{ page is defined ? 'yes' : 'no' }} -->
+<!-- app.request.attributes.get('hidePrice'): {{ app.request.attributes.get('hidePrice')|json_encode|raw }} -->
+<!-- Debug END -->
+
+{# Check for hidePrice in global template variables (Shopware 6.7.1+) or page extensions (older versions) #}
+{% set hidePriceData = null %}
+
+{# Try different ways to get the hidePrice data #}
+{% if hidePrice is defined and hidePrice %}
+    {% set hidePriceData = hidePrice %}
+{% elseif page is defined and page.extensions is defined and page.extensions.hidePrice is defined %}
+    {% set hidePriceData = page.extensions.hidePrice %}
+{% elseif app.request.attributes.get('hidePrice') %}
+    {% set hidePriceData = app.request.attributes.get('hidePrice') %}
+{% endif %}
+
+<!-- hidePriceData: {{ hidePriceData|json_encode|raw }} -->
+
+{% if hidePriceData and hidePriceData.hide %}
+    <div class="act-header-price-hide-info d-flex align-items-center" style="background-color: #f8f9fa; border-bottom: 1px solid #dee2e6; padding: 10px 0;">
         <div class="container-fluid">
-            <p class="act-header-price-hide-info-text mb-0">
-                {% if page.extensions.hidePrice.reason == 'not_logged_in' %}
+            <p class="act-header-price-hide-info-text mb-0 text-center">
+                {% if hidePriceData.reason == 'not_logged_in' %}
                     {{ "header.priceHideInfoNotLoggedIn"|trans|raw }}
-                {% elseif page.extensions.hidePrice.reason == 'not_allowed' %}
+                {% elseif hidePriceData.reason == 'not_allowed' %}
                     {{ "header.priceHideInfoNotAllowed"|trans }}
+                {% else %}
+                    Please log in to see prices
                 {% endif %}
             </p>
         </div>
