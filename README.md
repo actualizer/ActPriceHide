@@ -85,6 +85,7 @@ The plugin includes translations for:
 Translation keys:
 - `header.priceHideInfoNotLoggedIn`
 - `header.priceHideInfoNotAllowed`
+- `header.priceHideInfoAriaLabel` (accessibility)
 
 ## File Structure
 
@@ -97,7 +98,7 @@ ActPriceHide/
 │   ├── ActPriceHide.php
 │   ├── Resources/
 │   │   ├── config/
-│   │   │   ├── config.xml
+│   │   │   ├── config.xml (includes configurable colors)
 │   │   │   └── services.xml
 │   │   ├── snippet/
 │   │   │   ├── de_DE/
@@ -106,19 +107,18 @@ ActPriceHide/
 │   │   │       └── messages.en-GB.json
 │   │   └── views/
 │   │       └── storefront/
-│   │           ├── base.html.twig
+│   │           ├── base.html.twig (template extension for theme compatibility)
 │   │           ├── component/
 │   │           │   ├── buy-widget/
 │   │           │   ├── listing/
 │   │           │   └── product/
 │   │           ├── layout/
 │   │           │   └── header/
-│   │           │       └── header-price-hide-info.html.twig (updated for 6.7.1+)
+│   │           │       └── header-price-notice.html.twig (main template with accessibility features)
 │   │           └── page/
 │   │               ├── checkout/
 │   │               └── product-detail/
 │   └── Subscriber/
-│       ├── HeaderDataSubscriber.php (new in v1.1.0)
 │       └── StorefrontRenderSubscriber.php
 ```
 

@@ -6,7 +6,8 @@
     }
   },
   "header": {
-    "priceHideInfoNotLoggedIn": "Damit Sie diese Seite in vollem Umfang nutzen können <a href='/account/login'>melden</a> Sie sich bitte an.",
-    "priceHideInfoNotAllowed": "Hinweis: Ihr Account wurde noch nicht freigeschaltet."
+    "priceHideInfoNotLoggedIn": "Damit Sie diese Seite in vollem Umfang nutzen können <a href='/account/login' aria-label='Zur Anmeldung um Preise zu sehen'>melden</a> Sie sich bitte an.",
+    "priceHideInfoNotAllowed": "Hinweis: Ihr Account wurde noch nicht freigeschaltet.",
+    "priceHideInfoAriaLabel": "Wichtiger Hinweis zur Preisanzeige"
   }
 }

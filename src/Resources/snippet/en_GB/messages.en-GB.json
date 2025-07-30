@@ -7,7 +7,8 @@
     },
         "header": {
             "priceHideInfo": "Prices are only shown after login.",
-                "priceHideInfoNotLoggedIn": "To fully utilize this page, please <a href='/account/login'>log in</a>.",
-                "priceHideInfoNotAllowed": "Your account is not activated."
+                "priceHideInfoNotLoggedIn": "To fully utilize this page, please <a href='/account/login' aria-label='Go to login to see prices'>log in</a>.",
+                "priceHideInfoNotAllowed": "Your account is not activated.",
+                "priceHideInfoAriaLabel": "Important notice about price display"
         }
 }
