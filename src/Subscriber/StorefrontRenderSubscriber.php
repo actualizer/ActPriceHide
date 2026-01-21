@@ -73,11 +73,12 @@ class StorefrontRenderSubscriber implements EventSubscriberInterface
         // Set as global template variable for Shopware 6.7.1+
         $event->setParameter('hidePrice', new ArrayEntity($hidePrice));
         
-        // If the page is not available, we can't do anything.
-        if ($page !== null) {
+        // If the page is not available or not an object, we can't add extensions.
+        // On CMS pages (e.g. shipping costs), $page can be an array instead of a Page object.
+        if ($page !== null && is_object($page) && method_exists($page, 'addExtension')) {
             $page->addExtension('hidePrice', new ArrayEntity($hidePrice));
             
-            // Wenn es die Warenkorb-Seite ist und Preise versteckt sind, zur Login-Seite umleiten
+            // Redirect to login page if prices are hidden and user is on cart page
             if ($hidePrice['hide'] && $request->getPathInfo() === '/checkout/cart') {
                 $loginUrl = $this->router->generate('frontend.account.login.page', [
                     'redirectTo' => 'frontend.checkout.cart.page'
