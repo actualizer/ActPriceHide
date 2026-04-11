@@ -11,14 +11,14 @@ A Shopware 6 plugin that provides advanced price visibility control and cart acc
 
 ## Features
 
-- ✅ Hide prices for non-logged-in users
-- ✅ Restrict cart access for non-logged-in users
-- ✅ Customer group-based price visibility control
-- ✅ Information bar display when prices are hidden
-- ✅ Automatic redirect to login page on cart access
-- ✅ AJAX and normal page request compatibility
-- ✅ Multi-language support (German & English)
-- ✅ Compatible with Shopware 6.6.10 - 6.7.x (optimized for 6.7.1+)
+- Hide prices for non-logged-in users
+- Restrict cart access for non-logged-in users
+- Customer group-based price visibility control
+- Information bar display when prices are hidden
+- Automatic redirect to login page on cart access
+- AJAX and normal page request compatibility
+- Multi-language support (German & English)
+- Compatible with Shopware 6.6.10 - 6.7.x (optimized for 6.7.1+)
 
 ## Requirements
 
@@ -86,41 +86,6 @@ Translation keys:
 - `header.priceHideInfoNotLoggedIn`
 - `header.priceHideInfoNotAllowed`
 - `header.priceHideInfoAriaLabel` (accessibility)
-
-## File Structure
-
-```
-ActPriceHide/
-├── composer.json
-├── LICENSE
-├── README.md
-├── src/
-│   ├── ActPriceHide.php
-│   ├── Resources/
-│   │   ├── config/
-│   │   │   ├── config.xml (includes configurable colors)
-│   │   │   └── services.xml
-│   │   ├── snippet/
-│   │   │   ├── de_DE/
-│   │   │   │   └── messages.de-DE.json
-│   │   │   └── en_GB/
-│   │   │       └── messages.en-GB.json
-│   │   └── views/
-│   │       └── storefront/
-│   │           ├── base.html.twig (template extension for theme compatibility)
-│   │           ├── component/
-│   │           │   ├── buy-widget/
-│   │           │   ├── listing/
-│   │           │   └── product/
-│   │           ├── layout/
-│   │           │   └── header/
-│   │           │       └── header-price-notice.html.twig (main template with accessibility features)
-│   │           └── page/
-│   │               ├── checkout/
-│   │               └── product-detail/
-│   └── Subscriber/
-│       └── StorefrontRenderSubscriber.php
-```
 
 ## Development
 
