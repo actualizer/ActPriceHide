@@ -23,5 +23,15 @@
         <service id="Act\PriceHide\Subscriber\DataProductInformationFilterSubscriber">
             <tag name="kernel.event_subscriber"/>
         </service>
+
+        <service id="Act\PriceHide\Subscriber\InlineTrackingFilterSubscriber">
+            <tag name="kernel.event_subscriber"/>
+        </service>
+
+        <service id="Act\PriceHide\Subscriber\PriceLeakGuardSubscriber">
+            <argument type="service" id="Act\PriceHide\Service\HidePriceResolver"/>
+            <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
+            <tag name="kernel.event_subscriber"/>
+        </service>
     </services>
 </container>

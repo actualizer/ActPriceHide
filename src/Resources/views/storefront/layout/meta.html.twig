@@ -1,0 +1,91 @@
+{% sw_extends '@Storefront/storefront/layout/meta.html.twig' %}
+
+{#
+    Primary install channel for the dataLayer price-leak guard.
+
+    Rendered inside the very first block of <head>, before any tracking
+    plugin's own inline push. The block position is deterministic — plugin
+    Twig extension order does not matter, only block position in the final
+    template chain.
+
+    If a customer theme overrides this block without calling {{ parent() }},
+    the inline script is suppressed; the JS-plugin fallback in
+    app/storefront/src/price-leak-guard/index.js installs the same wrapper
+    on DOMContentLoaded as a secondary channel.
+#}
+{% block layout_head_meta_tags_charset %}
+    {{ parent() }}
+    {% if priceLeakGuardEnabled|default(false) %}
+        {% set actPhGuardHideAll = (priceLeakGuardHideAll|default(false)) ? 'true' : 'false' %}
+        {# Data source for the JS-plugin fallback when the inline script
+           below is suppressed by a theme override. #}
+        <meta name="act-price-leak-guard-ph-hide-all" content="{{ actPhGuardHideAll }}">
+        <script data-act-price-leak-guard="ph">
+        (function () {
+            if (window.__actPriceLeakGuardInstalled) {
+                window.__actPriceLeakGuardInstalled.extend([], {{ actPhGuardHideAll }});
+                return;
+            }
+            var state = {
+                idSet: new Set(),
+                hideAll: {{ actPhGuardHideAll }},
+                extend: function (moreIds, moreHideAll) {
+                    (moreIds || []).forEach(function (id) { state.idSet.add(String(id)); });
+                    if (moreHideAll) { state.hideAll = true; }
+                }
+            };
+            var PRICE_KEYS = ['price', 'value', 'item_price', 'revenue'];
+            var ID_KEYS = ['id', 'item_id', 'product_id', 'sku'];
+            function hasPriceKey(obj) {
+                for (var i = 0; i < PRICE_KEYS.length; i++) {
+                    if (Object.prototype.hasOwnProperty.call(obj, PRICE_KEYS[i])) { return true; }
+                }
+                return false;
+            }
+            function sanitize(node, seen) {
+                if (!node || typeof node !== 'object') { return; }
+                if (seen.has(node)) { return; }
+                seen.add(node);
+                if (Array.isArray(node)) {
+                    for (var i = 0; i < node.length; i++) { sanitize(node[i], seen); }
+                    return;
+                }
+                if (hasPriceKey(node)) {
+                    var match = state.hideAll;
+                    if (!match) {
+                        for (var j = 0; j < ID_KEYS.length; j++) {
+                            var id = node[ID_KEYS[j]];
+                            if (id != null && state.idSet.has(String(id))) { match = true; break; }
+                        }
+                    }
+                    if (match) {
+                        for (var k = 0; k < PRICE_KEYS.length; k++) { delete node[PRICE_KEYS[k]]; }
+                    }
+                }
+                var keys = Object.keys(node);
+                for (var m = 0; m < keys.length; m++) { sanitize(node[keys[m]], seen); }
+            }
+            window.dataLayer = window.dataLayer || [];
+            var originalPush = window.dataLayer.push;
+            window.dataLayer.push = function () {
+                try {
+                    var seen = new WeakSet();
+                    for (var i = 0; i < arguments.length; i++) { sanitize(arguments[i], seen); }
+                } catch (e) {
+                    if (window.console && console.warn) {
+                        console.warn('[ActPriceLeakGuard] sanitize failed, passing through:', e);
+                    }
+                }
+                return originalPush.apply(window.dataLayer, arguments);
+            };
+            try {
+                var seen = new WeakSet();
+                for (var i = 0; i < window.dataLayer.length; i++) {
+                    sanitize(window.dataLayer[i], seen);
+                }
+            } catch (e) { /* retro-sanitize is best-effort */ }
+            window.__actPriceLeakGuardInstalled = state;
+        })();
+        </script>
+    {% endif %}
+{% endblock %}

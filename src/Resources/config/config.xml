@@ -20,6 +20,15 @@
             <helpText lang="de-DE">Aktiviert zusätzliche Debug-Ausgaben für die Entwicklung</helpText>
             <defaultValue>false</defaultValue>
         </input-field>
+
+        <input-field type="bool">
+            <name>priceLeakGuardEnabled</name>
+            <label lang="en-GB">Enable dataLayer price-leak guard</label>
+            <label lang="de-DE">dataLayer Preis-Leak-Schutz aktivieren</label>
+            <helpText lang="en-GB">Intercepts window.dataLayer.push and strips price fields when prices are hidden. Catches client-side tracking events (add_to_wishlist, quick-view) that server-side filters cannot. Disable only if you observe tracking regressions.</helpText>
+            <helpText lang="de-DE">Fängt window.dataLayer.push ab und entfernt Preisfelder bei verborgenem Preis. Erfasst client-seitig ausgelöste Tracking-Events (add_to_wishlist, Quick-View), die serverseitige Filter nicht sehen. Nur deaktivieren, wenn Tracking-Probleme auftreten.</helpText>
+            <defaultValue>true</defaultValue>
+        </input-field>
     </card>
     
     <card>
