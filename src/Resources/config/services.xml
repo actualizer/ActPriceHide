@@ -15,11 +15,6 @@
             <tag name="kernel.event_subscriber"/>
         </service>
 
-        <service id="Act\PriceHide\Subscriber\ProductListingResultSubscriber">
-            <argument type="service" id="Act\PriceHide\Service\HidePriceResolver"/>
-            <tag name="kernel.event_subscriber"/>
-        </service>
-
         <service id="Act\PriceHide\Subscriber\ProductListingCriteriaSubscriber">
             <argument type="service" id="Act\PriceHide\Service\HidePriceResolver"/>
             <tag name="kernel.event_subscriber"/>

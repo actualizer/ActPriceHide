@@ -1,19 +1,47 @@
 {% sw_extends '@Storefront/storefront/component/product/card/box-standard.html.twig' %}
 
+{% block component_product_box %}
+    {% if product %}
+        {% set id = product.id %}
+        {% set name = product.translated.name %}
+        {% set brand = product.manufacturer.translated.name|default('') %}
+        {% set price = product.calculatedPrice.unitPrice %}
+
+        {% set cover = product.cover.media %}
+        {% set variation = product.variation %}
+        {% set displayParent = product.variantListingConfig.displayParent and product.parentId === null %}
+        {% set headlineLevel = element.config.boxHeadlineLevel.value %}
+        {% set headlineClasses = "product-name-headline mb-0" %}
+
+        {% set searchTerm = page.searchTerm %}
+        {% set childCount = product.childCount %}
+        {% set routeArguments = childCount > 0 and searchTerm ? { productId: id, search: searchTerm } : { productId: id } %}
+
+        {% set hidePrice = false %}
+        {% if app.request.attributes.get('hidePrice') and app.request.attributes.get('hidePrice').hide %}
+            {% set hidePrice = true %}
+        {% elseif page.extensions.hidePrice is defined and page.extensions.hidePrice.hide %}
+            {% set hidePrice = true %}
+        {% endif %}
+
+        {# When the price is hidden, drop the price key from data-product-information entirely. #}
+        {# Emitting price=0 would be indexed by search engines as "0 EUR" — worse than the leak. #}
+        {% set productInformation = hidePrice ? {id, name, brand} : {id, name, brand, price} %}
+
+        <div class="card product-box box-{{ layout }}" data-product-information="{{ productInformation|json_encode }}">
+            {% block component_product_box_content %}
+                {{ parent() }}
+            {% endblock %}
+        </div>
+    {% endif %}
+{% endblock %}
+
 {% block component_product_box_price %}
     {% set hidePrice = false %}
-    
-    {# Check request attributes first (works for both normal and AJAX requests) #}
     {% if app.request.attributes.get('hidePrice') and app.request.attributes.get('hidePrice').hide %}
         {% set hidePrice = true %}
-    {# Fallback to page extension (for normal page loads) #}
     {% elseif page.extensions.hidePrice is defined and page.extensions.hidePrice.hide %}
         {% set hidePrice = true %}
     {% endif %}
-    
-    {% if hidePrice %}
-        {# Price is hidden #}
-    {% else %}
-        {{ parent() }}
-    {% endif %}
+    {% if not hidePrice %}{{ parent() }}{% endif %}
 {% endblock %}
