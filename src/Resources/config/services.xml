@@ -4,9 +4,24 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
+        <service id="Act\PriceHide\Service\HidePriceResolver">
+            <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
+        </service>
+
         <service id="Act\PriceHide\Subscriber\StorefrontRenderSubscriber">
             <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
+            <argument type="service" id="Act\PriceHide\Service\HidePriceResolver"/>
             <argument type="service" id="router"/>
+            <tag name="kernel.event_subscriber"/>
+        </service>
+
+        <service id="Act\PriceHide\Subscriber\ProductListingResultSubscriber">
+            <argument type="service" id="Act\PriceHide\Service\HidePriceResolver"/>
+            <tag name="kernel.event_subscriber"/>
+        </service>
+
+        <service id="Act\PriceHide\Subscriber\ProductListingCriteriaSubscriber">
+            <argument type="service" id="Act\PriceHide\Service\HidePriceResolver"/>
             <tag name="kernel.event_subscriber"/>
         </service>
     </services>

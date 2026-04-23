@@ -20,6 +20,16 @@ A Shopware 6 plugin that provides advanced price visibility control and cart acc
 - Multi-language support (German & English)
 - Compatible with Shopware 6.6.10 - 6.7.x (optimized for 6.7.1+)
 
+## Price-Leak Protection (v1.1.3)
+
+When prices are hidden, the plugin now also closes three server-side leak vectors:
+
+- `data-product-information` attribute on listing product cards — price is zeroed out via a `ProductListingResultEvent` subscriber before Twig renders, so the DOM attribute contains `"price":0`.
+- Listing price-range aggregation — the `price` aggregation is stripped from `Criteria` so min/max values do not appear in listing/search/suggest XHR responses.
+- JSON-LD `schema.org/Offer` on the product detail page — the `page_product_detail_json_ld_script` block is suppressed when the price is hidden, so no structured-data price reaches search engines or scrapers.
+
+These changes respect the existing customer-group allowlist: a logged-in customer in an allowed group still sees the full price in all channels.
+
 ## Requirements
 
 - Shopware 6.6.10 or higher (up to 6.7.x)
