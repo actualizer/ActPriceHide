@@ -1,3 +1,4 @@
+import './component/act-price-hide-info';
 import './component/act-price-hide-guard-status';
 
 import deDE from './snippet/de-DE.json';

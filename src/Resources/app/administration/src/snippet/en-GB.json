@@ -1,5 +1,10 @@
 {
     "act-price-hide": {
+        "settings": {
+            "info": {
+                "description": "Hides prices and cart access for unauthenticated visitors and configured customer groups. A notice is shown instead of the price and checkout access is redirected until an authorised customer logs in. Prices are additionally stripped from meta tags, JSON-LD, listing aggregations and tracking scripts."
+            }
+        },
         "guardStatus": {
             "checking": "Checking …",
             "recheck": "Re-check",

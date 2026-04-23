@@ -2,6 +2,19 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/shopware/platform/master/src/Core/System/SystemConfig/Schema/config.xsd">
     <card>
+        <title lang="en-GB">Information</title>
+        <title lang="de-DE">Information</title>
+
+        <component name="act-price-hide-info">
+            <name>pluginInfo</name>
+        </component>
+
+        <component name="act-price-hide-guard-status">
+            <name>guardStatus</name>
+        </component>
+    </card>
+
+    <card>
         <title lang="en-GB">Configuration</title>
         <title lang="de-DE">Konfiguration</title>
 
@@ -29,10 +42,6 @@
             <helpText lang="de-DE">Fängt window.dataLayer.push ab und entfernt Preisfelder bei verborgenem Preis. Erfasst client-seitig ausgelöste Tracking-Events (add_to_wishlist, Quick-View), die serverseitige Filter nicht sehen. Nur deaktivieren, wenn Tracking-Probleme auftreten.</helpText>
             <defaultValue>true</defaultValue>
         </input-field>
-
-        <component name="act-price-hide-guard-status">
-            <name>guardStatus</name>
-        </component>
     </card>
     
     <card>

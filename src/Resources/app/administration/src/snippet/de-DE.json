@@ -1,5 +1,10 @@
 {
     "act-price-hide": {
+        "settings": {
+            "info": {
+                "description": "Versteckt Preise und Warenkorb-Zugriff für nicht eingeloggte Kunden und definierte Kundengruppen. Statt des Preises wird ein Hinweis angezeigt und der Checkout-Zugriff umgeleitet, bis sich ein berechtigter Kunde anmeldet. Zusätzlich werden Preise aus Meta-Tags, JSON-LD, Listing-Aggregationen und Tracking-Skripten entfernt."
+            }
+        },
         "guardStatus": {
             "checking": "Prüfe …",
             "recheck": "Erneut prüfen",
