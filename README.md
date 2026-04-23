@@ -2,12 +2,6 @@
 
 A Shopware 6 plugin that provides advanced price visibility control and cart access management. Hide prices and restrict cart access for non-logged-in users or specific customer groups.
 
-## Version Compatibility
-
-| Plugin Version | Shopware Version | Branch | Download |
-|----------------|------------------|---------|----------|
-| 1.1.x | 6.7.1+ | main | [Latest Release](../../releases/latest) |
-
 ## Features
 
 - Hide prices for non-logged-in users
@@ -62,9 +56,8 @@ These changes respect the existing customer-group allowlist: a logged-in custome
 
 ## Technical Details
 
-### Architecture (v1.1.0+)
+### Architecture
 - **Global Template Variables**: Uses Shopware's native template variable system for reliable data access
-- **Dual Compatibility**: Works with both 6.7.1+ global variables and legacy page.extensions
 - **HeaderDataSubscriber**: Dedicated subscriber for header-specific data injection
 
 ### Events Used
@@ -109,11 +102,8 @@ The plugin respects Shopware's logging configuration. Check your log files for a
 
 ## Compatibility
 
-- **Shopware Version**: 6.6.10 - 6.7.x
-  - v1.0.x: Best for Shopware 6.6.10 - 6.7.0
-  - v1.1.0+: Required for Shopware 6.7.1+ (improved template variable handling)
+- **Shopware Version**: 6.7.1+
 - **PHP Version**: 8.3+
-- **Template Compatibility**: Uses Shopware 6.6+ template structure
 - **AJAX Support**: Full compatibility with AJAX requests
 
 ## Support
