@@ -2,6 +2,7 @@
 
 namespace Act\PriceHide\Subscriber;
 
+use Act\PriceHide\Service\HidePriceResolver;
 use Shopware\Core\Framework\Struct\ArrayEntity;
 use Shopware\Core\System\SystemConfig\SystemConfigService;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -18,6 +19,7 @@ class StorefrontRenderSubscriber implements EventSubscriberInterface
 {
     public function __construct(
         private readonly SystemConfigService $systemConfigService,
+        private readonly HidePriceResolver $hidePriceResolver,
         private readonly RouterInterface $router
     ) {}
 
@@ -62,11 +64,10 @@ class StorefrontRenderSubscriber implements EventSubscriberInterface
         $page = $event->getParameters()['page'] ?? null;
 
         // Set request attributes for all requests (works for both normal and AJAX)
-        $hidePrice = match (true) {
-            empty($showPriceCustomerGroups) => ['hide' => true, 'reason' => $customer ? 'not_allowed' : 'not_logged_in'],
-            !in_array($customerGroup->getId(), $showPriceCustomerGroups) => ['hide' => true, 'reason' => $customer ? 'not_allowed' : 'not_logged_in'],
-            default => ['hide' => false, 'reason' => '']
-        };
+        $hidePrice = [
+            'hide' => $this->hidePriceResolver->shouldHide($salesChannelContext),
+            'reason' => $customer ? 'not_allowed' : 'not_logged_in',
+        ];
         
         $request->attributes->set('hidePrice', $hidePrice);
         
@@ -128,11 +129,10 @@ class StorefrontRenderSubscriber implements EventSubscriberInterface
         }
 
         // Add hidePrice extension to the request attributes and as global twig variable
-        $hidePrice = match (true) {
-            empty($showPriceCustomerGroups) => ['hide' => true, 'reason' => $customer ? 'not_allowed' : 'not_logged_in'],
-            !in_array($customerGroup->getId(), $showPriceCustomerGroups) => ['hide' => true, 'reason' => $customer ? 'not_allowed' : 'not_logged_in'],
-            default => ['hide' => false, 'reason' => '']
-        };
+        $hidePrice = [
+            'hide' => $this->hidePriceResolver->shouldHide($salesChannelContext),
+            'reason' => $customer ? 'not_allowed' : 'not_logged_in',
+        ];
         
         $request->attributes->set('hidePrice', $hidePrice);
         $request->attributes->set('_hidePrice', $hidePrice); // Alternative key for templates

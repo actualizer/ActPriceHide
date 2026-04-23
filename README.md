@@ -7,7 +7,6 @@ A Shopware 6 plugin that provides advanced price visibility control and cart acc
 | Plugin Version | Shopware Version | Branch | Download |
 |----------------|------------------|---------|----------|
 | 1.1.x | 6.7.1+ | main | [Latest Release](../../releases/latest) |
-| 1.0.x | 6.6.10 - 6.7.0 | [v1.0-maintenance](../../tree/v1.0-maintenance) | [v1.0.1](../../releases/tag/v1.0.1) |
 
 ## Features
 
@@ -18,13 +17,22 @@ A Shopware 6 plugin that provides advanced price visibility control and cart acc
 - Automatic redirect to login page on cart access
 - AJAX and normal page request compatibility
 - Multi-language support (German & English)
-- Compatible with Shopware 6.6.10 - 6.7.x (optimized for 6.7.1+)
+- Compatible with Shopware 6.7.1+
+
+## Price-Leak Protection (v1.1.3)
+
+When prices are hidden, the plugin now also closes three server-side leak vectors:
+
+- `data-product-information` attribute on listing product cards — price is zeroed out via a `ProductListingResultEvent` subscriber before Twig renders, so the DOM attribute contains `"price":0`.
+- Listing price-range aggregation — the `price` aggregation is stripped from `Criteria` so min/max values do not appear in listing/search/suggest XHR responses.
+- JSON-LD `schema.org/Offer` on the product detail page — the `page_product_detail_json_ld_script` block is suppressed when the price is hidden, so no structured-data price reaches search engines or scrapers.
+
+These changes respect the existing customer-group allowlist: a logged-in customer in an allowed group still sees the full price in all channels.
 
 ## Requirements
 
-- Shopware 6.6.10 or higher (up to 6.7.x)
+- Shopware 6.7.1 or higher
 - PHP 8.3 or higher
-- **Note**: Version 1.1.0+ recommended for Shopware 6.7.1+ due to improved template variable handling
 
 ## Installation
 
