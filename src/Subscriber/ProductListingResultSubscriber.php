@@ -11,6 +11,7 @@ use Shopware\Core\Content\Product\Events\ProductListingResultEvent;
 use Shopware\Core\Content\Product\Events\ProductSearchResultEvent;
 use Shopware\Core\Content\Product\Events\ProductSuggestResultEvent;
 use Shopware\Core\Content\Product\ProductEntity;
+use Shopware\Core\System\SalesChannel\Entity\SalesChannelEntityLoadedEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class ProductListingResultSubscriber implements EventSubscriberInterface
@@ -23,6 +24,9 @@ class ProductListingResultSubscriber implements EventSubscriberInterface
             ProductListingResultEvent::class => 'onResult',
             ProductSearchResultEvent::class => 'onResult',
             ProductSuggestResultEvent::class => 'onResult',
+            // Also catch products loaded outside standard listings (CMS product
+            // sliders on the homepage, cross-selling, search suggest, etc.).
+            'sales_channel.product.loaded' => 'onProductLoaded',
         ];
     }
 
@@ -32,10 +36,25 @@ class ProductListingResultSubscriber implements EventSubscriberInterface
             return;
         }
 
-        // Null out calculated prices so Twig's data-product-information attribute
-        // serializes as price=0 and no price data leaks into the DOM.
+        $this->zeroOut($event->getResult()->getEntities());
+    }
+
+    public function onProductLoaded(SalesChannelEntityLoadedEvent $event): void
+    {
+        if (!$this->hideResolver->shouldHide($event->getSalesChannelContext())) {
+            return;
+        }
+
+        $this->zeroOut($event->getEntities());
+    }
+
+    /**
+     * @param iterable<object> $entities
+     */
+    private function zeroOut(iterable $entities): void
+    {
         $zero = $this->zeroPrice();
-        foreach ($event->getResult()->getEntities() as $product) {
+        foreach ($entities as $product) {
             if (!$product instanceof ProductEntity) {
                 continue;
             }
