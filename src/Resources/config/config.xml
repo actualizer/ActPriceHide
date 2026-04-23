@@ -29,6 +29,10 @@
             <helpText lang="de-DE">Fängt window.dataLayer.push ab und entfernt Preisfelder bei verborgenem Preis. Erfasst client-seitig ausgelöste Tracking-Events (add_to_wishlist, Quick-View), die serverseitige Filter nicht sehen. Nur deaktivieren, wenn Tracking-Probleme auftreten.</helpText>
             <defaultValue>true</defaultValue>
         </input-field>
+
+        <component name="act-price-hide-guard-status">
+            <name>guardStatus</name>
+        </component>
     </card>
     
     <card>

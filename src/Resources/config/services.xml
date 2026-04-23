@@ -33,5 +33,10 @@
             <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
             <tag name="kernel.event_subscriber"/>
         </service>
+
+        <service id="Act\PriceHide\Command\VerifyGuardCommand">
+            <argument type="service" id="sales_channel_domain.repository"/>
+            <tag name="console.command"/>
+        </service>
     </services>
 </container>

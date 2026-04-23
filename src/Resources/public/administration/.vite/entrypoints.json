@@ -1,0 +1,23 @@
+{
+  "base": "/bundles/actpricehide/administration/",
+  "entryPoints": {
+    "act-price-hide": {
+      "css": [],
+      "dynamic": [],
+      "js": [
+        "/bundles/actpricehide/administration/assets/act-price-hide-BtO3A4t1.js"
+      ],
+      "legacy": false,
+      "preload": []
+    }
+  },
+  "legacy": false,
+  "metadatas": {},
+  "version": [
+    "7.1.0",
+    7,
+    1,
+    0
+  ],
+  "viteServer": null
+}

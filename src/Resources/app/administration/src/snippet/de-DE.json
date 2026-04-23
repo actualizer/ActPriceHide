@@ -1,0 +1,16 @@
+{
+    "act-price-hide": {
+        "guardStatus": {
+            "checking": "Prüfe …",
+            "recheck": "Erneut prüfen",
+            "primaryTitle": "Schutz aktiv (Primär-Kanal)",
+            "primaryBody": "Das Inline-Script im <head> ist sichtbar. Der dataLayer-Schutz greift synchron vor jedem Tracker.",
+            "fallbackTitle": "Schutz aktiv (Fallback-Kanal)",
+            "fallbackBody": "Das Inline-Script fehlt, aber der JS-Plugin-Fallback liest die Konfiguration aus den Meta-Tags. Ihr Theme überschreibt vermutlich 'layout/meta.html.twig' ohne {{ parent() }}. Der Schutz greift verzögert auf DOMContentLoaded.",
+            "missingTitle": "Schutz NICHT erkannt",
+            "missingBody": "Weder das Inline-Script noch die Fallback-Meta-Tags wurden in der Storefront gefunden. Entweder ist 'dataLayer Preis-Leak-Schutz aktivieren' in der Config ausgeschaltet, oder ein Theme/Plugin überschreibt 'layout/meta.html.twig' und 'layout_head_meta_tags_charset' ohne parent().",
+            "errorTitle": "Prüfung fehlgeschlagen",
+            "errorBody": "Die Storefront konnte nicht abgerufen werden. Prüfen Sie die Sales-Channel-Erreichbarkeit."
+        }
+    }
+}

@@ -1,0 +1,34 @@
+<div class="act-price-hide-guard-status">
+    {% block act_price_hide_guard_status %}
+        <div v-if="status === 'loading'">
+            {{ $tc('act-price-hide.guardStatus.checking') }}
+        </div>
+
+        <mt-banner v-else-if="status === 'primary'" variant="positive" :hideIcon="true">
+            <strong>{{ $tc('act-price-hide.guardStatus.primaryTitle') }}</strong><br>
+            {{ $tc('act-price-hide.guardStatus.primaryBody') }}
+        </mt-banner>
+
+        <mt-banner v-else-if="status === 'fallback'" variant="attention" :hideIcon="true">
+            <strong>{{ $tc('act-price-hide.guardStatus.fallbackTitle') }}</strong><br>
+            {{ $tc('act-price-hide.guardStatus.fallbackBody') }}
+        </mt-banner>
+
+        <mt-banner v-else-if="status === 'missing'" variant="critical" :hideIcon="true">
+            <strong>{{ $tc('act-price-hide.guardStatus.missingTitle') }}</strong><br>
+            {{ $tc('act-price-hide.guardStatus.missingBody') }}
+        </mt-banner>
+
+        <mt-banner v-else variant="critical" :hideIcon="true">
+            <strong>{{ $tc('act-price-hide.guardStatus.errorTitle') }}</strong><br>
+            {{ $tc('act-price-hide.guardStatus.errorBody') }}
+        </mt-banner>
+
+        <div style="margin-top: 12px;">
+            <mt-button size="small" variant="secondary" @click="runCheck">
+                {{ $tc('act-price-hide.guardStatus.recheck') }}
+            </mt-button>
+            <small v-if="checkedUrl" style="margin-left: 12px; opacity: 0.6;">{{ checkedUrl }}</small>
+        </div>
+    {% endblock %}
+</div>
