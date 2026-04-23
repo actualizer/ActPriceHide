@@ -19,5 +19,9 @@
             <argument type="service" id="Act\PriceHide\Service\HidePriceResolver"/>
             <tag name="kernel.event_subscriber"/>
         </service>
+
+        <service id="Act\PriceHide\Subscriber\DataProductInformationFilterSubscriber">
+            <tag name="kernel.event_subscriber"/>
+        </service>
     </services>
 </container>
