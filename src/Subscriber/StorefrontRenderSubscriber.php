@@ -7,8 +7,6 @@ use Shopware\Core\Framework\Struct\ArrayEntity;
 use Shopware\Core\System\SystemConfig\SystemConfigService;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Shopware\Storefront\Event\StorefrontRenderEvent;
-use Symfony\Component\VarDumper\VarDumper;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\RouterInterface;
 use Shopware\Core\Content\Product\Events\ProductListingResultEvent;
 use Shopware\Core\Content\Product\Events\ProductSearchResultEvent;
@@ -50,15 +48,18 @@ class StorefrontRenderSubscriber implements EventSubscriberInterface
         // Check if debug mode is enabled in plugin config
         $debugMode = $this->systemConfigService->get('ActPriceHide.config.debugMode', $salesChannelContext->getSalesChannelId());
 
-        // Dump the customer group for debugging purposes only if debug mode is enabled
+        // Log debug info to error_log only if debug mode is enabled.
+        // VarDumper-based output was removed because it writes directly into the
+        // HTML response and would expose customer-group + hide-price settings
+        // if the debug flag were ever toggled in production (price-leak risk).
         if ($debugMode) {
-            VarDumper::dump([
+            error_log('[ActPriceHide][StorefrontRender] ' . json_encode([
                 'customerGroupId' => $customerGroup->getId(),
                 'customerGroupName' => $customerGroup->getName(),
                 'showPriceCustomerGroups' => $showPriceCustomerGroups,
                 'isEmptyShowPriceCustomerGroups' => empty($showPriceCustomerGroups),
-                'isInShowPriceCustomerGroups' => in_array($customerGroup->getId(), $showPriceCustomerGroups)
-            ]);
+                'isInShowPriceCustomerGroups' => in_array($customerGroup->getId(), $showPriceCustomerGroups, true),
+            ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
         }
 
         $page = $event->getParameters()['page'] ?? null;
@@ -116,16 +117,15 @@ class StorefrontRenderSubscriber implements EventSubscriberInterface
         // Check if debug mode is enabled in plugin config
         $debugMode = $this->systemConfigService->get('ActPriceHide.config.debugMode', $salesChannelContext->getSalesChannelId());
 
-        // Dump the customer group for debugging purposes only if debug mode is enabled
+        // Log debug info to error_log only if debug mode is enabled (see note above).
         if ($debugMode) {
-            VarDumper::dump([
-                'context' => 'AJAX Request',
+            error_log('[ActPriceHide][AJAX] ' . json_encode([
                 'customerGroupId' => $customerGroup->getId(),
                 'customerGroupName' => $customerGroup->getName(),
                 'showPriceCustomerGroups' => $showPriceCustomerGroups,
                 'isEmptyShowPriceCustomerGroups' => empty($showPriceCustomerGroups),
-                'isInShowPriceCustomerGroups' => in_array($customerGroup->getId(), $showPriceCustomerGroups)
-            ]);
+                'isInShowPriceCustomerGroups' => in_array($customerGroup->getId(), $showPriceCustomerGroups, true),
+            ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
         }
 
         // Add hidePrice extension to the request attributes and as global twig variable
