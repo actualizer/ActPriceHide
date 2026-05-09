@@ -31,7 +31,7 @@ Component.register('act-price-hide-guard-status', {
                 } else {
                     this.status = 'missing';
                 }
-            } catch (e) {
+            } catch {
                 this.status = 'error';
             }
         },

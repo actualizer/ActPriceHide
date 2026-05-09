@@ -1,4 +1,4 @@
-import Plugin from 'src/plugin-system/plugin.class';
+const Plugin = window.PluginBaseClass;
 
 /**
  * Secondary install channel for the dataLayer price-leak guard.
@@ -96,7 +96,7 @@ export default class ActPriceLeakGuardPlugin extends Plugin {
             for (let i = 0; i < window.dataLayer.length; i++) {
                 sanitize(window.dataLayer[i], seen);
             }
-        } catch (e) { /* retro-sanitize is best-effort */ }
+        } catch { /* retro-sanitize is best-effort */ }
 
         window.__actPriceLeakGuardInstalled = state;
     }

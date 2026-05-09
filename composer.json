@@ -6,7 +6,10 @@
   "license": "MIT",
   "authors": [
     {
-      "name": "ACT"
+      "name": "Actualize",
+      "email": "plugin@actualize.de",
+      "homepage": "https://actualize.de",
+      "role": "Developer"
     }
   ],
   "require": {
@@ -20,13 +23,25 @@
       "en-GB": "Actualize: Hide Prices and Cart"
     },
     "description": {
-      "de-DE": "Versteckt Preise und Warenkorb-Zugriff für nicht eingeloggte Benutzer und spezifische Kundengruppen",
-      "en-GB": "Hides prices and cart access for non-logged-in users and specific customer groups"
+      "de-DE": "Versteckt Preise und Warenkorb-Zugriff für nicht eingeloggte Benutzer und spezifische Kundengruppen. Schützt Verkaufskanäle vor Preis-Leaks via DOM-Crawling oder API.",
+      "en-GB": "Hides prices and cart access for non-logged-in users and specific customer groups. Protects sales channels from price leaks via DOM-crawling, JSON-LD or API access."
+    },
+    "manufacturerLink": {
+      "de-DE": "https://actualize.de",
+      "en-GB": "https://actualize.de"
+    },
+    "supportLink": {
+      "de-DE": "https://actualize.de",
+      "en-GB": "https://actualize.de"
     }
   },
   "autoload": {
     "psr-4": {
       "Act\\PriceHide\\": "src/"
     }
+  },
+  "scripts": {
+    "format": "docker run --rm -v $(pwd):/ext shopware/shopware-cli:latest extension format /ext",
+    "check":  "docker run --rm -v $(pwd):/ext shopware/shopware-cli:latest extension validate --full /ext"
   }
 }

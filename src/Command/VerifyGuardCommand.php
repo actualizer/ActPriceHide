@@ -7,6 +7,7 @@ use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Filter\EqualsFilter;
+use Shopware\Core\System\SalesChannel\Aggregate\SalesChannelDomain\SalesChannelDomainCollection;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -28,6 +29,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 )]
 class VerifyGuardCommand extends Command
 {
+    /**
+     * @param EntityRepository<SalesChannelDomainCollection> $salesChannelDomainRepository
+     */
     public function __construct(private readonly EntityRepository $salesChannelDomainRepository)
     {
         parent::__construct();
@@ -86,11 +90,11 @@ class VerifyGuardCommand extends Command
         $criteria->addFilter(new EqualsFilter('salesChannel.active', true));
         $criteria->setLimit(1);
 
-        $domain = $this->salesChannelDomainRepository->search($criteria, Context::createDefaultContext())->first();
-        if ($domain === null || !method_exists($domain, 'getUrl')) {
+        $domain = $this->salesChannelDomainRepository->search($criteria, Context::createCLIContext())->first();
+        if ($domain === null) {
             return null;
         }
         $url = $domain->getUrl();
-        return is_string($url) && $url !== '' ? $url : null;
+        return $url !== '' ? $url : null;
     }
 }

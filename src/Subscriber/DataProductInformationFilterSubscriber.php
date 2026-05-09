@@ -36,7 +36,7 @@ class DataProductInformationFilterSubscriber implements EventSubscriberInterface
         }
 
         $response = $event->getResponse();
-        $contentType = $response->headers->get('Content-Type', '');
+        $contentType = $response->headers->get('Content-Type') ?? '';
         if (!str_contains($contentType, 'text/html')) {
             return;
         }
