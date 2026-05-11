@@ -46,6 +46,17 @@ Client-side (introduced in v1.2.0):
 
 ## Installation
 
+### Via Composer (recommended)
+
+```bash
+composer require actualizer/price-hide
+bin/console plugin:refresh
+bin/console plugin:install --activate ActPriceHide
+bin/console cache:clear
+```
+
+### Manual
+
 1. Download or clone this plugin into your `custom/plugins/` directory
 2. Install and activate the plugin via CLI:
    ```bash
