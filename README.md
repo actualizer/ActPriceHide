@@ -29,7 +29,7 @@ Client-side (introduced in v1.2.0):
 - **`window.dataLayer.push` wrapper** — inline `<script>` at the top of `<head>` intercepts every subsequent push and applies the same strip rules. Covers interaction-triggered events (add-to-wishlist, quick-view, scroll-triggered `view_item_list`) that server-side filters cannot see because the payload is built in the browser at interaction time.
 - **JS-plugin fallback** — a second install channel registered on `<body>` reads the config from `<meta>` tags and installs the wrapper on `DOMContentLoaded`. Kicks in when a customer theme overrides `layout/meta.html.twig` without calling `{{ parent() }}` and suppresses the primary inline script.
 
-### Operations (v1.2.1)
+### Operations (v1.2.2)
 
 - **Kill-switch**: `ActPriceHide.config.priceLeakGuardEnabled` (default on). Toggles the client-side dataLayer guard — the server-side HTML filters always stay active. Toggle in admin + cache clear, no redeploy.
 - **CLI verification**:
