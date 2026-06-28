@@ -42,7 +42,7 @@ Client-side (introduced in v1.2.0):
 ## Requirements
 
 - Shopware 6.7.1 or higher
-- PHP 8.3 or higher
+- PHP 8.4 or higher
 
 ## Installation
 
@@ -139,7 +139,7 @@ The plugin respects Shopware's logging configuration. Check your log files for a
 ## Compatibility
 
 - **Shopware Version**: 6.7.1+
-- **PHP Version**: 8.3+
+- **PHP Version**: 8.4+
 - **AJAX Support**: Full compatibility with AJAX requests
 
 ## Support
