@@ -103,7 +103,6 @@ bin/console cache:clear
 
 ### Architecture
 - **Global Template Variables**: Uses Shopware's native template variable system for reliable data access
-- **HeaderDataSubscriber**: Dedicated subscriber for header-specific data injection
 - **HidePriceResolver**: Single source of truth for the hide decision, shared by the render subscriber, listing-criteria subscriber, inline-tracking filter, dataLayer-guard subscriber, and cart-route guard.
 
 ### Events Used
