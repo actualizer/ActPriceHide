@@ -74,7 +74,7 @@ class CheckoutAccessSubscriber implements EventSubscriberInterface
         if (!in_array($route, self::LOGIN_REDIRECT_ROUTES, true)) {
             // Cart mutation, order placement and cart.json. A redirect would be
             // followed as a GET, and cart.json would answer with an HTML page.
-            $event->setResponse(new Response('', Response::HTTP_FORBIDDEN));
+            $event->setResponse(new Response('Forbidden', Response::HTTP_FORBIDDEN));
 
             return;
         }
