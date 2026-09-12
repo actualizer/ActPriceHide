@@ -8,7 +8,7 @@ A Shopware 6 plugin that provides advanced price visibility control and cart acc
 - Restrict cart access for non-logged-in users
 - Customer group-based price visibility control
 - Information bar display when prices are hidden
-- Automatic redirect to login page on cart access
+- Server-side lockout of the cart routes on cart access
 - AJAX and normal page request compatibility
 - Multi-language support (German & English)
 - Compatible with Shopware 6.7.1+
@@ -38,6 +38,25 @@ Client-side (introduced in v1.2.0):
   ```
   Fetches the storefront and returns exit code `0` (inline primary channel active), `1` (fallback channel only — theme probably overrides `layout_head_meta_tags_charset` without `parent()`), or `2` (no guard detected at all). Suitable for deploy pipelines.
 - **Admin guard-status card**: the plugin config page shows the current protection state directly below the info banner — green (primary channel), yellow (fallback only), red (not installed). Re-check button re-runs the probe.
+
+### Cart routes (v1.2.8)
+
+Cart markup renders from the line-item and summary templates, which emit their own price output and share no block with the product templates this plugin overrides. Hiding the header cart button removes the entry point, not the route, so the routes are closed server-side instead:
+
+| Route | Response while prices are hidden |
+| --- | --- |
+| `frontend.checkout.cart.page` (`/checkout/cart`) | `302` to `/account/login?redirectTo=frontend.checkout.cart.page` |
+| `frontend.cart.offcanvas` (`/checkout/offcanvas`) | `204`, empty body |
+| `frontend.checkout.info` (`/widgets/checkout/info`) | `204`, empty body |
+
+The two widget routes are answered empty rather than redirected because their callers inject the response into the offcanvas or the header container. The redirect is `302`, never `301` — the destination depends on plugin configuration and login state.
+
+This replaces the `<meta http-equiv="refresh">` used up to v1.2.7, which shipped the fully priced cart page and only then asked the browser to leave.
+
+### Further leak vectors closed in v1.2.8
+
+- **Footer VAT notice** — the `showVatNotice` render parameter is set to `false`, so the core footer drops its VAT/shipping line while prices are hidden.
+- **OpenGraph product price** — `product:price:amount` and `product:price:currency` are dropped on the product detail page. The override now defers to the core block via `{{ parent() }}` whenever prices are visible; up to v1.2.7 it replaced the block unconditionally with a stale copy that also lost `ogTitle`, `ogDescription`, `openGraphMedia` and `og:video`.
 
 ## Requirements
 
@@ -77,19 +96,19 @@ bin/console cache:clear
 
 1. **Price Visibility Check**: The plugin checks if the current user is logged in and belongs to an allowed customer group
 2. **Price Hiding**: If conditions are not met, prices are hidden across all storefront pages (product listings, detail pages, cart, etc.)
-3. **Cart Access Control**: Cart functionality is restricted when prices are hidden
+3. **Cart Access Control**: The cart page and the two cart widget routes are answered with a redirect resp. an empty response before the rendered markup leaves the server
 4. **Information Display**: Shows informational messages to users when prices are hidden
-5. **Login Redirect**: Automatically redirects users to login page when trying to access cart
 
 ## Technical Details
 
 ### Architecture
 - **Global Template Variables**: Uses Shopware's native template variable system for reliable data access
 - **HeaderDataSubscriber**: Dedicated subscriber for header-specific data injection
-- **HidePriceResolver**: Single source of truth for the hide decision, shared by the render subscriber, listing-criteria subscriber, inline-tracking filter, and dataLayer-guard subscriber.
+- **HidePriceResolver**: Single source of truth for the hide decision, shared by the render subscriber, listing-criteria subscriber, inline-tracking filter, dataLayer-guard subscriber, and cart-route guard.
 
 ### Events Used
 - `StorefrontRenderEvent` - To inject price hiding logic into all storefront pages
+- `KernelEvents::RESPONSE` (priority 0) - Cart-route guard. Runs on the response rather than the request because the `SalesChannelContext` is only resolved on `kernel.controller`
 - `KernelEvents::RESPONSE` (priority -128 / -127) - Post-rendering HTML filters for `data-product-information` attributes and inline tracking scripts
 - Template overrides for price-sensitive areas
 
@@ -97,7 +116,6 @@ bin/console cache:clear
 The plugin extends multiple templates to ensure consistent price hiding:
 - Product listing pages
 - Product detail pages
-- Cart and checkout pages
 - Search suggestions
 - Header cart widget
 - `layout/meta.html.twig` for the head-level dataLayer-guard inline script

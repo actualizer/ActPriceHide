@@ -11,6 +11,11 @@
         <service id="Act\PriceHide\Subscriber\StorefrontRenderSubscriber">
             <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
             <argument type="service" id="Act\PriceHide\Service\HidePriceResolver"/>
+            <tag name="kernel.event_subscriber"/>
+        </service>
+
+        <service id="Act\PriceHide\Subscriber\CheckoutAccessSubscriber">
+            <argument type="service" id="Act\PriceHide\Service\HidePriceResolver"/>
             <argument type="service" id="router"/>
             <tag name="kernel.event_subscriber"/>
         </service>

@@ -7,7 +7,6 @@ use Shopware\Core\Framework\Struct\ArrayEntity;
 use Shopware\Core\System\SystemConfig\SystemConfigService;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Shopware\Storefront\Event\StorefrontRenderEvent;
-use Symfony\Component\Routing\RouterInterface;
 use Shopware\Core\Content\Product\Events\ProductListingResultEvent;
 use Shopware\Core\Content\Product\Events\ProductSearchResultEvent;
 use Shopware\Core\System\SalesChannel\SalesChannelContext;
@@ -17,8 +16,7 @@ class StorefrontRenderSubscriber implements EventSubscriberInterface
 {
     public function __construct(
         private readonly SystemConfigService $systemConfigService,
-        private readonly HidePriceResolver $hidePriceResolver,
-        private readonly RouterInterface $router
+        private readonly HidePriceResolver $hidePriceResolver
     ) {}
 
     public static function getSubscribedEvents(): array
@@ -74,20 +72,18 @@ class StorefrontRenderSubscriber implements EventSubscriberInterface
         
         // Set as global template variable for Shopware 6.7.1+
         $event->setParameter('hidePrice', new ArrayEntity($hidePrice));
-        
+
+        // The core footer renders its VAT/shipping notice unless this parameter
+        // is explicitly false. The footer is an ESI sub-request with its own
+        // StorefrontRenderEvent, so setting it here reaches that render scope.
+        if ($hidePrice['hide']) {
+            $event->setParameter('showVatNotice', false);
+        }
+
         // If the page is not available or not an object, we can't add extensions.
         // On CMS pages (e.g. shipping costs), $page can be an array instead of a Page object.
         if ($page !== null && is_object($page) && method_exists($page, 'addExtension')) {
             $page->addExtension('hidePrice', new ArrayEntity($hidePrice));
-            
-            // Redirect to login page if prices are hidden and user is on cart page
-            if ($hidePrice['hide'] && $request->getPathInfo() === '/checkout/cart') {
-                $loginUrl = $this->router->generate('frontend.account.login.page', [
-                    'redirectTo' => 'frontend.checkout.cart.page'
-                ]);
-                
-                $event->setParameter('redirectUrl', $loginUrl);
-            }
         }
     }
 
