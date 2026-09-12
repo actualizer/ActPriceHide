@@ -39,15 +39,17 @@ Client-side (introduced in v1.2.0):
   Fetches the storefront and returns exit code `0` (inline primary channel active), `1` (fallback channel only — theme probably overrides `layout_head_meta_tags_charset` without `parent()`), or `2` (no guard detected at all). Suitable for deploy pipelines.
 - **Admin guard-status card**: the plugin config page shows the current protection state directly below the info banner — green (primary channel), yellow (fallback only), red (not installed). Re-check button re-runs the probe.
 
-### Cart routes (v1.2.8)
+### Purchase funnel (v1.3.0)
 
-Cart markup renders from the line-item and summary templates, which emit their own price output and share no block with the product templates this plugin overrides. Hiding the header cart button removes the entry point, not the route, so the routes are closed server-side instead:
+Cart markup renders from the line-item and summary templates, which emit their own price output and share no block with the product templates this plugin overrides. Hiding the cart button removes the entry point, not the route. Every route under `frontend.checkout.` and `frontend.cart.` is therefore closed server-side while prices are hidden — matching by prefix so routes added by future Shopware versions are covered by default:
 
-| Route | Response while prices are hidden |
+| Route group | Response while prices are hidden |
 | --- | --- |
-| `frontend.checkout.cart.page` (`/checkout/cart`) | `302` to `/account/login` |
-| `frontend.cart.offcanvas` (`/checkout/offcanvas`) | `204`, empty body |
-| `frontend.checkout.info` (`/widgets/checkout/info`) | `204`, empty body |
+| Landing pages: `cart.page`, `confirm.page`, `finish.page`, `register.page` | `302` to `/account/login` |
+| XHR fragments: `frontend.cart.offcanvas`, `frontend.checkout.info` | `204`, empty body |
+| Everything else: `cart.json`, cart mutation, `POST /checkout/order`, … | `403`, empty body |
+
+`/checkout/cart.json` returned the full cart as JSON including `unitPrice`, `totalPrice` and `positionPrice`, bypassing every HTML filter. Cart mutation and order placement were reachable as well, so a customer outside the allowed groups could complete an order without ever seeing a price. Both were closed in v1.3.0.
 
 The two widget routes are answered empty rather than redirected because their callers inject the response into the offcanvas or the header container. The redirect is `302`, never `301` — the destination depends on plugin configuration and login state. It carries no `redirectTo`: the core hands a logged-in customer straight back to that route, which for a customer outside the allowed groups bounced between cart and login until the browser gave up (fixed in v1.2.10).
 

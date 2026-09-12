@@ -13,14 +13,21 @@ use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
- * Blocks the cart routes while prices are hidden. Cart markup renders from the
- * line-item and summary templates, which share no block with the product
- * templates this plugin overrides — suppressing the header cart button removes
- * the entry point, not the route.
+ * Closes the whole purchase funnel while prices are hidden: cart display, cart
+ * mutation and checkout. Guarding by route prefix rather than by a fixed list
+ * keeps routes added by future Shopware versions covered by default.
  */
 class CheckoutAccessSubscriber implements EventSubscriberInterface
 {
-    private const REDIRECT_ROUTE = 'frontend.checkout.cart.page';
+    private const GUARDED_PREFIXES = ['frontend.checkout.', 'frontend.cart.'];
+
+    /** Pages a visitor can land on directly, so they get somewhere they can act. */
+    private const LOGIN_REDIRECT_ROUTES = [
+        'frontend.checkout.cart.page',
+        'frontend.checkout.confirm.page',
+        'frontend.checkout.finish.page',
+        'frontend.checkout.register.page',
+    ];
 
     /** XHR fragments: a redirect would inject the login page into the offcanvas. */
     private const EMPTY_ROUTES = [
@@ -49,7 +56,7 @@ class CheckoutAccessSubscriber implements EventSubscriberInterface
         $request = $event->getRequest();
         $route = $request->attributes->get('_route');
 
-        if ($route !== self::REDIRECT_ROUTE && !in_array($route, self::EMPTY_ROUTES, true)) {
+        if (!\is_string($route) || !$this->isGuarded($route)) {
             return;
         }
 
@@ -58,8 +65,16 @@ class CheckoutAccessSubscriber implements EventSubscriberInterface
             return;
         }
 
-        if ($route !== self::REDIRECT_ROUTE) {
+        if (in_array($route, self::EMPTY_ROUTES, true)) {
             $event->setResponse(new Response('', Response::HTTP_NO_CONTENT));
+
+            return;
+        }
+
+        if (!in_array($route, self::LOGIN_REDIRECT_ROUTES, true)) {
+            // Cart mutation, order placement and cart.json. A redirect would be
+            // followed as a GET, and cart.json would answer with an HTML page.
+            $event->setResponse(new Response('', Response::HTTP_FORBIDDEN));
 
             return;
         }
@@ -72,5 +87,16 @@ class CheckoutAccessSubscriber implements EventSubscriberInterface
         // 302: the destination depends on plugin config and login state, a
         // permanent redirect would outlive both in browser and CDN caches.
         $event->setResponse(new RedirectResponse($loginUrl, Response::HTTP_FOUND));
+    }
+
+    private function isGuarded(string $route): bool
+    {
+        foreach (self::GUARDED_PREFIXES as $prefix) {
+            if (str_starts_with($route, $prefix)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
