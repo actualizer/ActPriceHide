@@ -1,14 +1,14 @@
 # ActPriceHide - Shopware Plugin
 
-A Shopware 6 plugin that provides advanced price visibility control and cart access management. Hide prices and restrict cart access for non-logged-in users or specific customer groups.
+A Shopware 6 plugin that provides advanced price visibility control and purchase-funnel access management. Hide prices and close cart and checkout for non-logged-in users or specific customer groups.
 
 ## Features
 
 - Hide prices for non-logged-in users
-- Restrict cart access for non-logged-in users
+- Close cart, cart mutation and checkout for non-logged-in users
 - Customer group-based price visibility control
 - Information bar display when prices are hidden
-- Server-side lockout of the cart routes on cart access
+- Server-side lockout of every cart and checkout route, including `/checkout/cart.json` and order placement
 - AJAX and normal page request compatibility
 - Multi-language support (German & English)
 - Compatible with Shopware 6.7.1+
@@ -98,7 +98,7 @@ bin/console cache:clear
 
 1. **Price Visibility Check**: The plugin checks if the current user is logged in and belongs to an allowed customer group
 2. **Price Hiding**: If conditions are not met, prices are hidden across all storefront pages (product listings, detail pages, cart, etc.)
-3. **Cart Access Control**: The cart page and the two cart widget routes are answered with a redirect resp. an empty response before the rendered markup leaves the server
+3. **Funnel Access Control**: Every route under `frontend.checkout.` and `frontend.cart.` is answered with a redirect, an empty fragment or `403` before the rendered response leaves the server
 4. **Information Display**: Shows informational messages to users when prices are hidden
 
 ## Technical Details
@@ -109,7 +109,7 @@ bin/console cache:clear
 
 ### Events Used
 - `StorefrontRenderEvent` - To inject price hiding logic into all storefront pages
-- `KernelEvents::RESPONSE` (priority 0) - Cart-route guard. Runs on the response rather than the request because the `SalesChannelContext` is only resolved on `kernel.controller`
+- `KernelEvents::RESPONSE` (priority 0) - Purchase-funnel guard. Runs on the response rather than the request because the `SalesChannelContext` is only resolved on `kernel.controller`
 - `KernelEvents::RESPONSE` (priority -128 / -127) - Post-rendering HTML filters for `data-product-information` attributes and inline tracking scripts
 - Template overrides for price-sensitive areas
 
