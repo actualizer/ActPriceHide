@@ -90,7 +90,7 @@ class VerifyGuardCommand extends Command
         $criteria->addFilter(new EqualsFilter('salesChannel.active', true));
         $criteria->setLimit(1);
 
-        $domain = $this->salesChannelDomainRepository->search($criteria, Context::createCLIContext())->first();
+        $domain = $this->salesChannelDomainRepository->search($criteria, Context::createCLIContext())->getEntities()->first();
         if ($domain === null) {
             return null;
         }
