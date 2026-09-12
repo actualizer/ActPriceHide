@@ -116,7 +116,7 @@ The plugin extends multiple templates to ensure consistent price hiding:
 - Product listing pages
 - Product detail pages
 - Search suggestions
-- Header cart widget
+- Header cart button and widget
 - `layout/meta.html.twig` for the head-level dataLayer-guard inline script
 
 ### AJAX Compatibility

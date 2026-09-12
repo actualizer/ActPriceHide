@@ -1,0 +1,20 @@
+{% sw_extends '@Storefront/storefront/layout/header/header.html.twig' %}
+
+{# The cart button lives in this block, the widget include only fills it. Without
+   this override the button, its link and the off-canvas trigger stay clickable
+   for visitors the cart routes already reject. #}
+{% block layout_header_actions_cart %}
+    {% set hidePrice = false %}
+
+    {# Check request attributes first (works for both normal and AJAX requests) #}
+    {% if app.request.attributes.get('hidePrice') and app.request.attributes.get('hidePrice').hide %}
+        {% set hidePrice = true %}
+    {# Fallback to page extension (for normal page loads) #}
+    {% elseif page.extensions.hidePrice is defined and page.extensions.hidePrice.hide %}
+        {% set hidePrice = true %}
+    {% endif %}
+
+    {% if not hidePrice %}
+        {{ parent() }}
+    {% endif %}
+{% endblock %}
