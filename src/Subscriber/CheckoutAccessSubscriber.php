@@ -64,9 +64,10 @@ class CheckoutAccessSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $loginUrl = $this->router->generate('frontend.account.login.page', [
-            'redirectTo' => 'frontend.checkout.cart.page',
-        ]);
+        // No redirectTo: AuthController::loginPage() hands a logged-in customer
+        // straight back to that route, which for a customer outside the allowed
+        // groups bounces between cart and login until the browser gives up.
+        $loginUrl = $this->router->generate('frontend.account.login.page');
 
         // 302: the destination depends on plugin config and login state, a
         // permanent redirect would outlive both in browser and CDN caches.

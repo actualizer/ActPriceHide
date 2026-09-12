@@ -45,11 +45,11 @@ Cart markup renders from the line-item and summary templates, which emit their o
 
 | Route | Response while prices are hidden |
 | --- | --- |
-| `frontend.checkout.cart.page` (`/checkout/cart`) | `302` to `/account/login?redirectTo=frontend.checkout.cart.page` |
+| `frontend.checkout.cart.page` (`/checkout/cart`) | `302` to `/account/login` |
 | `frontend.cart.offcanvas` (`/checkout/offcanvas`) | `204`, empty body |
 | `frontend.checkout.info` (`/widgets/checkout/info`) | `204`, empty body |
 
-The two widget routes are answered empty rather than redirected because their callers inject the response into the offcanvas or the header container. The redirect is `302`, never `301` — the destination depends on plugin configuration and login state.
+The two widget routes are answered empty rather than redirected because their callers inject the response into the offcanvas or the header container. The redirect is `302`, never `301` — the destination depends on plugin configuration and login state. It carries no `redirectTo`: the core hands a logged-in customer straight back to that route, which for a customer outside the allowed groups bounced between cart and login until the browser gave up (fixed in v1.2.10).
 
 This replaces the `<meta http-equiv="refresh">` used up to v1.2.7, which shipped the fully priced cart page and only then asked the browser to leave.
 
