@@ -1,0 +1,33 @@
+.act-price-hide-info {
+    h4 {
+        margin-bottom: 12px;
+    }
+
+    &__how-to {
+        margin: 0 0 24px;
+        padding-left: 20px;
+        list-style: disc outside;
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        li:last-child {
+            margin-bottom: 0;
+        }
+    }
+
+    &__description {
+        margin-bottom: 8px;
+    }
+
+    &__branding {
+        margin-top: 32px;
+    }
+
+    &__logo {
+        display: block;
+        height: 28px;
+        margin-bottom: 10px;
+    }
+}

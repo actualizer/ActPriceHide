@@ -1,7 +1,7 @@
 {
   "name": "actualizer/price-hide",
   "description": "Hide prices and cart access for non-logged-in users and specific customer groups",
-  "version": "1.3.1",
+  "version": "1.3.2",
   "type": "shopware-platform-plugin",
   "license": "MIT",
   "authors": [
@@ -32,8 +32,8 @@
       "en-GB": "https://actualize.de"
     },
     "supportLink": {
-      "de-DE": "https://actualize.de",
-      "en-GB": "https://actualize.de"
+      "de-DE": "https://github.com/actualizer/ActPriceHide/issues",
+      "en-GB": "https://github.com/actualizer/ActPriceHide/issues"
     }
   },
   "autoload": {

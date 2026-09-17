@@ -2,10 +2,12 @@
   "base": "/bundles/actpricehide/administration/",
   "entryPoints": {
     "act-price-hide": {
-      "css": [],
+      "css": [
+        "/bundles/actpricehide/administration/assets/act-price-hide-B7wdW-Fe.css"
+      ],
       "dynamic": [],
       "js": [
-        "/bundles/actpricehide/administration/assets/act-price-hide-CplGMmUZ.js"
+        "/bundles/actpricehide/administration/assets/act-price-hide-8QQAvRR4.js"
       ],
       "legacy": false,
       "preload": []

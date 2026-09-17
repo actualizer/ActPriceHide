@@ -1,8 +1,11 @@
 {
   "main.js": {
-    "file": "assets/act-price-hide-CplGMmUZ.js",
+    "file": "assets/act-price-hide-8QQAvRR4.js",
     "name": "act-price-hide",
     "src": "main.js",
-    "isEntry": true
+    "isEntry": true,
+    "css": [
+      "assets/act-price-hide-B7wdW-Fe.css"
+    ]
   }
 }

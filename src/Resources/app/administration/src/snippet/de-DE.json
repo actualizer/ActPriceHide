@@ -2,7 +2,16 @@
     "act-price-hide": {
         "settings": {
             "info": {
-                "description": "Versteckt Preise und Warenkorb-Zugriff für nicht eingeloggte Kunden und definierte Kundengruppen. Statt des Preises wird ein Hinweis angezeigt und der Checkout-Zugriff umgeleitet, bis sich ein berechtigter Kunde anmeldet. Zusätzlich werden Preise aus Meta-Tags, JSON-LD, Listing-Aggregationen und Tracking-Skripten entfernt."
+                "howTo": {
+                    "title": "So funktioniert's",
+                    "item1": "Alles wird hier eingestellt, eine weitere Stelle im Admin gibt es nicht.",
+                    "item2": "<strong>Kundengruppen für die Preisanzeige</strong> muss gefüllt sein. Bleibt die Liste leer, sehen auch angemeldete Kunden keine Preise.",
+                    "item3": "Versteckt wird nicht nur die Anzeige: Warenkorb- und Checkout-Routen sind serverseitig gesperrt, ebenso Preisangaben in strukturierten Daten, Meta-Angaben und Tracking.",
+                    "item4": "Die Karte <strong>Guard-Status</strong> zeigt, ob die Absicherung im Browser greift. Gelb bedeutet meist, dass das Theme <strong>layout/meta.html.twig</strong> ohne parent() überschreibt.",
+                    "item5": "Nach einer Änderung der Header-Farben ist ein <strong>theme:compile</strong> nötig."
+                },
+                "description": "Versteckt Preise und Warenkorb-Zugriff für nicht eingeloggte Kunden und definierte Kundengruppen. Statt des Preises wird ein Hinweis angezeigt und der Checkout-Zugriff umgeleitet, bis sich ein berechtigter Kunde anmeldet. Zusätzlich werden Preise aus Meta-Tags, JSON-LD, Listing-Aggregationen und Tracking-Skripten entfernt.",
+                "issues": "Probleme oder Feature-Wünsche?"
             }
         },
         "guardStatus": {

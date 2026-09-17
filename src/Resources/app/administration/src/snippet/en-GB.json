@@ -2,7 +2,16 @@
     "act-price-hide": {
         "settings": {
             "info": {
-                "description": "Hides prices and cart access for unauthenticated visitors and configured customer groups. A notice is shown instead of the price and checkout access is redirected until an authorised customer logs in. Prices are additionally stripped from meta tags, JSON-LD, listing aggregations and tracking scripts."
+                "howTo": {
+                    "title": "How it works",
+                    "item1": "Everything is configured here; there is no other place in the admin.",
+                    "item2": "<strong>Customer groups allowed to see prices</strong> must be filled in. If the list stays empty, even logged-in customers see no prices.",
+                    "item3": "It is not only the display that is hidden: cart and checkout routes are blocked server-side, as are prices in structured data, meta tags and tracking.",
+                    "item4": "The <strong>Guard status</strong> card shows whether the browser-side protection is in effect. Yellow usually means the theme overrides <strong>layout/meta.html.twig</strong> without parent().",
+                    "item5": "After changing the header colours, run <strong>theme:compile</strong>."
+                },
+                "description": "Hides prices and cart access for unauthenticated visitors and configured customer groups. A notice is shown instead of the price and checkout access is redirected until an authorised customer logs in. Prices are additionally stripped from meta tags, JSON-LD, listing aggregations and tracking scripts.",
+                "issues": "Problems or feature requests?"
             }
         },
         "guardStatus": {
