@@ -11,6 +11,11 @@ class HidePriceResolver
 
     public function shouldHide(SalesChannelContext $ctx): bool
     {
+        // Only an explicit "off" opens the channel; a missing value keeps it closed (fail-closed).
+        if ($this->systemConfig->get('ActPriceHide.config.enabled', $ctx->getSalesChannelId()) === false) {
+            return false;
+        }
+
         $groups = $this->systemConfig->get('ActPriceHide.config.customerGroups', $ctx->getSalesChannelId());
         if (!is_array($groups) || $groups === []) {
             return true;

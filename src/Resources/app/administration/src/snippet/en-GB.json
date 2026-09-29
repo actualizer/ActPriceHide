@@ -5,7 +5,7 @@
                 "howTo": {
                     "title": "How it works",
                     "item1": "Everything is configured here; there is no other place in the admin.",
-                    "item2": "<strong>Customer groups allowed to see prices</strong> must be filled in. If the list stays empty, even logged-in customers see no prices.",
+                    "item2": "<strong>Hide prices and checkout</strong> applies per sales channel: switched off, nothing is hidden there. Switched on, only the selected <strong>customer groups</strong> see prices; if the list stays empty, not even logged-in customers do.",
                     "item3": "It is not only the display that is hidden: cart and checkout routes are blocked server-side, as are prices in structured data, meta tags and tracking.",
                     "item4": "The <strong>Guard status</strong> card shows whether the browser-side protection is in effect. Yellow usually means the theme overrides <strong>layout/meta.html.twig</strong> without parent().",
                     "item5": "After changing the header colours, run <strong>theme:compile</strong>."

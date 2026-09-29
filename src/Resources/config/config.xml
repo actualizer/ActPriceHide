@@ -18,6 +18,15 @@
         <title lang="en-GB">Configuration</title>
         <title lang="de-DE">Konfiguration</title>
 
+        <input-field type="bool">
+            <name>enabled</name>
+            <label lang="en-GB">Hide prices and checkout</label>
+            <label lang="de-DE">Preise und Checkout ausblenden</label>
+            <helpText lang="en-GB">Switch off per sales channel to hide nothing there, e.g. in the main shop. When on, only the customer groups below see prices and can order.</helpText>
+            <helpText lang="de-DE">Pro Verkaufskanal ausschalten, um dort nichts auszublenden, z. B. im Hauptshop. Eingeschaltet sehen nur die unten gewählten Kundengruppen Preise und können bestellen.</helpText>
+            <defaultValue>true</defaultValue>
+        </input-field>
+
         <component name="sw-entity-multi-id-select">
             <name>customerGroups</name>
             <entity>customer_group</entity>
