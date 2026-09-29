@@ -57,6 +57,15 @@
         <title lang="en-GB">Header Bar Styling</title>
         <title lang="de-DE">Header-Leiste Styling</title>
         
+        <input-field type="bool">
+            <name>showNoticeBar</name>
+            <label lang="en-GB">Show notice bar</label>
+            <label lang="de-DE">Hinweisleiste anzeigen</label>
+            <helpText lang="en-GB">Switch off per sales channel where logging in does not unlock prices. Prices, cart and checkout stay hidden either way.</helpText>
+            <helpText lang="de-DE">Pro Verkaufskanal ausschalten, wenn eine Anmeldung dort keine Preise freischaltet. Preise, Warenkorb und Checkout bleiben in beiden Fällen ausgeblendet.</helpText>
+            <defaultValue>true</defaultValue>
+        </input-field>
+        
         <input-field type="colorpicker">
             <name>headerBackgroundColor</name>
             <label lang="en-GB">Header bar background color</label>

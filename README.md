@@ -94,6 +94,7 @@ bin/console cache:clear
 4. Configure customer groups that should see prices
 5. Set up redirect behavior and display options
 6. **Hide prices and checkout** (`ActPriceHide.config.enabled`, per sales channel, default on): switch it off in every sales channel that should behave like a normal shop. Only an explicit boolean "off" opens a channel; a channel without a value stays closed. On the CLI pass `--json` (`system:config:set ActPriceHide.config.enabled false --json -s <salesChannelId>`), otherwise the string `"false"` is stored and the channel stays closed.
+7. **Show notice bar** (`ActPriceHide.config.showNoticeBar`, per sales channel, default on): switch it off where logging in does not unlock prices. Only the bar disappears; prices, cart and checkout stay hidden.
 
 ## How it works
 

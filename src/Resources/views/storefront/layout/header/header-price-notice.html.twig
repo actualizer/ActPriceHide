@@ -3,7 +3,7 @@
 {# Get hidePrice data #}
 {% set hidePriceData = app.request.attributes.get('hidePrice') %}
 
-{% if hidePriceData and hidePriceData.hide %}
+{% if hidePriceData and hidePriceData.hide and config('ActPriceHide.config.showNoticeBar') is not same as(false) %}
     {# Get colors from plugin configuration #}
     {% set backgroundColor = config('ActPriceHide.config.headerBackgroundColor') ?? '#17a2b8' %}
     {% set textColor = config('ActPriceHide.config.headerTextColor') ?? '#ffffff' %}
