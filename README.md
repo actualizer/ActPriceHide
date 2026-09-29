@@ -60,6 +60,14 @@ This replaces the `<meta http-equiv="refresh">` used up to v1.2.7, which shipped
 - **Footer VAT notice** — the `showVatNotice` render parameter is set to `false`, so the core footer drops its VAT/shipping line while prices are hidden.
 - **OpenGraph product price** — `product:price:amount` and `product:price:currency` are dropped on the product detail page. The override now defers to the core block via `{{ parent() }}` whenever prices are visible; up to v1.2.7 it replaced the block unconditionally with a stale copy that also lost `ogTitle`, `ogDescription`, `openGraphMedia` and `og:video`.
 
+### Further tracking formats and variant selection (v1.6.0)
+
+- **Nested tracking payloads** — JSON objects in `<script>` blocks that contain an `item_id` (e.g. `window.x = {"<id>": {"item_id": …, "price": …, "listPrice": {…}, "extra": {…}}}`) are decoded and re-encoded without `price`, `value`, `item_price`, `revenue`, `listPrice`, `realPrice` and `item_startPrice` at any depth. Keys are removed, never set to `0` or `null`. The re-encoded JSON keeps `/` escaped and hex-encodes `<`, `>`, `&`, `'` and `"`, so no value can close the surrounding script element.
+- **Script escaping of flat item objects** — flat item objects inside `gtag()` / `dataLayer.push()` calls are re-encoded with the same flags. Up to v1.5.0 they were re-encoded with unescaped slashes, which turned an escaped `<\/script>` inside a string value into a literal `</script>` and ended the script element early.
+- **JavaScript object literals** — in scripts with an unquoted `item_id:` key the same price keys are removed (`price: '349'`, `realPrice: '349'`, …).
+- **Item data attributes** — on elements carrying `data-item_id`, every `data-*price*` attribute is removed (`data-price`, `data-list-price`, `data-item_startPrice`, …).
+- **Variant selection** — optional, see configuration item 8. The configurator is rendered on its own; price, tax notice, delivery information, buy form and offer microdata stay hidden. Switching variants reloads the page or the buy box through the same template, so the rule applies there as well.
+
 ## Requirements
 
 - Shopware 6.7.1 or higher
@@ -95,6 +103,7 @@ bin/console cache:clear
 5. Set up redirect behavior and display options
 6. **Hide prices and checkout** (`ActPriceHide.config.enabled`, per sales channel, default on): switch it off in every sales channel that should behave like a normal shop. Only an explicit boolean "off" opens a channel; a channel without a value stays closed. On the CLI pass `--json` (`system:config:set ActPriceHide.config.enabled false --json -s <salesChannelId>`), otherwise the string `"false"` is stored and the channel stays closed.
 7. **Show notice bar** (`ActPriceHide.config.showNoticeBar`, per sales channel, default on): switch it off where logging in does not unlock prices. Only the bar disappears; prices, cart and checkout stay hidden.
+8. **Show variant selection while prices are hidden** (`ActPriceHide.config.showVariantSelection`, per sales channel, default off): keeps the variant configurator (e.g. colours) on the product page so visitors can browse the variants. Price, delivery information and buy button stay hidden. On the CLI pass `--json`.
 
 ## How it works
 

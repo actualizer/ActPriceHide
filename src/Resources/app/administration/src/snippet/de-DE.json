@@ -8,7 +8,8 @@
                     "item2": "<strong>Preise und Checkout ausblenden</strong> gilt pro Verkaufskanal: ausgeschaltet wird dort nichts ausgeblendet. Eingeschaltet sehen nur die gewählten <strong>Kundengruppen für die Preisanzeige</strong> Preise; bleibt die Liste leer, auch angemeldete Kunden nicht.",
                     "item3": "Versteckt wird nicht nur die Anzeige: Warenkorb- und Checkout-Routen sind serverseitig gesperrt, ebenso Preisangaben in strukturierten Daten, Meta-Angaben und Tracking.",
                     "item4": "Die Karte <strong>Guard-Status</strong> zeigt, ob die Absicherung im Browser greift. Gelb bedeutet meist, dass das Theme <strong>layout/meta.html.twig</strong> ohne parent() überschreibt.",
-                    "item5": "Nach einer Änderung der Header-Farben ist ein <strong>theme:compile</strong> nötig."
+                    "item5": "Nach einer Änderung der Header-Farben ist ein <strong>theme:compile</strong> nötig.",
+                    "item6": "<strong>Variantenauswahl trotz ausgeblendeter Preise anzeigen</strong> lässt pro Verkaufskanal die Auswahl von Farben oder Größen auf der Produktseite stehen. Preis, Lieferzeit und Kaufbutton bleiben ausgeblendet."
                 },
                 "description": "Versteckt Preise und Warenkorb-Zugriff für nicht eingeloggte Kunden und definierte Kundengruppen. Statt des Preises wird ein Hinweis angezeigt und der Checkout-Zugriff umgeleitet, bis sich ein berechtigter Kunde anmeldet. Zusätzlich werden Preise aus Meta-Tags, JSON-LD, Listing-Aggregationen und Tracking-Skripten entfernt.",
                 "issues": "Probleme oder Feature-Wünsche?"

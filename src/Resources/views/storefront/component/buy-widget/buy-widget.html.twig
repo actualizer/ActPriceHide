@@ -17,6 +17,9 @@
         <div class="product-detail-buy{% if elementId %}-{{ elementId }}{% endif %}">
             {{ block('buy_widget_rich_snippets') }}
             {{ block('buy_widget_buy_container') }}
+            {% if config('ActPriceHide.config.showVariantSelection') %}
+                {{ block('buy_widget_configurator_include') }}
+            {% endif %}
             {% if config('core.cart.wishlistEnabled') %}
                 {{ block('buy_widget_wishlist') }}
             {% endif %}

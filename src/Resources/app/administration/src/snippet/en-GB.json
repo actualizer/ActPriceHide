@@ -8,7 +8,8 @@
                     "item2": "<strong>Hide prices and checkout</strong> applies per sales channel: switched off, nothing is hidden there. Switched on, only the selected <strong>customer groups</strong> see prices; if the list stays empty, not even logged-in customers do.",
                     "item3": "It is not only the display that is hidden: cart and checkout routes are blocked server-side, as are prices in structured data, meta tags and tracking.",
                     "item4": "The <strong>Guard status</strong> card shows whether the browser-side protection is in effect. Yellow usually means the theme overrides <strong>layout/meta.html.twig</strong> without parent().",
-                    "item5": "After changing the header colours, run <strong>theme:compile</strong>."
+                    "item5": "After changing the header colours, run <strong>theme:compile</strong>.",
+                    "item6": "<strong>Show variant selection while prices are hidden</strong> keeps the choice of colours or sizes on the product page per sales channel. Price, delivery time and buy button stay hidden."
                 },
                 "description": "Hides prices and cart access for unauthenticated visitors and configured customer groups. A notice is shown instead of the price and checkout access is redirected until an authorised customer logs in. Prices are additionally stripped from meta tags, JSON-LD, listing aggregations and tracking scripts.",
                 "issues": "Problems or feature requests?"

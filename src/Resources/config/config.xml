@@ -35,6 +35,15 @@
         </component>
 
         <input-field type="bool">
+            <name>showVariantSelection</name>
+            <label lang="en-GB">Show variant selection while prices are hidden</label>
+            <label lang="de-DE">Variantenauswahl trotz ausgeblendeter Preise anzeigen</label>
+            <helpText lang="en-GB">Keeps the variant selection (e.g. colours) on the product page so visitors can browse the variants. Price, delivery time and buy button stay hidden.</helpText>
+            <helpText lang="de-DE">Lässt die Variantenauswahl (z. B. Farben) auf der Produktseite stehen, damit Besucher die Varianten ansehen können. Preis, Lieferzeit und Kaufbutton bleiben ausgeblendet.</helpText>
+            <defaultValue>false</defaultValue>
+        </input-field>
+
+        <input-field type="bool">
             <name>debugMode</name>
             <label lang="en-GB">Enable debug mode</label>
             <label lang="de-DE">Debug-Modus aktivieren</label>

@@ -3,7 +3,7 @@ import './act-price-hide-info.scss';
 
 const { Component } = Shopware;
 
-const HOW_TO_ITEM_COUNT = 5;
+const HOW_TO_ITEM_COUNT = 6;
 
 Component.register('act-price-hide-info', {
     template,
