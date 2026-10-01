@@ -20,7 +20,7 @@ When prices are hidden, the plugin actively closes every known leak vector so th
 Server-side (introduced in v1.1.x–v1.2.0):
 
 - **`data-product-information` attribute on product cards** — the `price` key is omitted entirely from the JSON blob that Shopware core emits on every card (listing, category, search, CMS sliders, cross-selling, suggest, wishlist). The key is removed rather than zeroed — a zero would be indexed as "0 EUR" in search results.
-- **Listing price-range aggregation** — the `price` aggregation is stripped from listing/search/suggest `Criteria`, so min/max values do not appear in XHR responses or filter sliders.
+- **Listing price-range aggregation** — the `price` aggregation is stripped from listing/search/suggest `Criteria`, so min/max values do not appear in XHR responses or filter sliders. For search, the aggregation was still returned by the search filter endpoint up to v1.6.0, see below; search result pages and suggest never displayed prices.
 - **JSON-LD `schema.org/Offer`** on the product detail page — the `page_product_detail_json_ld_script` block is suppressed, so no structured-data price reaches search engines or scrapers.
 - **Server-rendered inline tracking scripts** — `gtag('event', 'view_item', {…})` and `dataLayer.push({…})` blocks rendered by tracker plugins (GA4, Google Ads, Meta Pixel via GTM, WbmTagManagerEcomm, etc.) are scanned at response time; `price`, `value`, `item_price`, `revenue` keys are removed from item objects, and outer `value` / `revenue` totals in the enclosing call are stripped as well.
 
@@ -67,6 +67,19 @@ This replaces the `<meta http-equiv="refresh">` used up to v1.2.7, which shipped
 - **JavaScript object literals** — in scripts with an unquoted `item_id:` key the same price keys are removed (`price: '349'`, `realPrice: '349'`, …).
 - **Item data attributes** — on elements carrying `data-item_id`, every `data-*price*` attribute is removed (`data-price`, `data-list-price`, `data-item_startPrice`, …).
 - **Variant selection** — optional, see configuration item 8. The configurator is rendered on its own; price, tax notice, delivery information, buy form and offer microdata stay hidden. Switching variants reloads the page or the buy box through the same template, so the rule applies there as well.
+
+### Price filter, price sorting and page-level tracking prices (v1.6.1)
+
+Listing, search and suggest pages never displayed prices. Up to v1.6.0, however, only the filter slider and the price aggregation of category listings and suggest were removed. The request parameters behind them kept working, so prices could be read without ever being displayed:
+
+- **Search filter endpoint** — `/widgets/search/filter?search=<product number>` returned the `price` aggregation with `min` equal to `max`, i.e. the exact price. The search dispatches its own criteria event, which is now handled like listing and suggest.
+- **Price filter** — `min-price` / `max-price` narrowed listing and search results, which reveals any price by bisection. The price filter is now removed before it reaches the criteria, so it neither filters nor aggregates nor wraps the other filters' aggregations.
+- **Price sorting** — sortings on a price field are removed from the available sortings (the dropdown no longer offers them). A request that still asks for one is answered in the order of the first remaining sorting.
+- **Criteria parts on price fields in general** — every filter, post-filter, score query, aggregation and sorting whose field name contains `price` is dropped from listing, search and suggest criteria, whatever its name. Shopware versions that build search criteria from generic request parameters (`filter[…]`, `aggregations[…]`, `sort[…]`) are covered by this.
+- **Page-level tracking prices** — JSON payloads in `<script>` blocks are also cleaned when they have no `item_id` but carry `productPrice`, `ecomm_pvalue` or `ecomm_totalvalue`. The client-side guard removes the same keys.
+- **Hidden price inputs** — `<input type="hidden">` elements whose name contains `price` keep the element and lose the value.
+
+Tracking keys are matched by name. A tracking integration that renders a price under a key not listed here is not covered until that key is added — after installing or updating one, check a product page's source for the product's real price.
 
 ## Requirements
 
@@ -122,6 +135,8 @@ bin/console cache:clear
 - `StorefrontRenderEvent` - To inject price hiding logic into all storefront pages
 - `KernelEvents::RESPONSE` (priority 0) - Purchase-funnel guard. Runs on the response rather than the request because the `SalesChannelContext` is only resolved on `kernel.controller`
 - `KernelEvents::RESPONSE` (priority -128 / -127) - Post-rendering HTML filters for `data-product-information` attributes and inline tracking scripts
+- `ProductListingCollectFilterEvent` - Removes the price filter before aggregations and post-filters are built
+- `ProductListingCriteriaEvent`, `ProductSearchCriteriaEvent`, `ProductSuggestCriteriaEvent` (priority -1000) - Drop every criteria part on a price field
 - Template overrides for price-sensitive areas
 
 ### Template Extensions

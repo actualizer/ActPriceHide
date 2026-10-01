@@ -72,6 +72,45 @@ class InlineTrackingFilterSubscriberTest extends TestCase
         static::assertStringNotContainsString('"price"', $filtered);
     }
 
+    public function testStripsThePagePriceFromAPayloadWithoutItems(): void
+    {
+        $html = '<script>dataLayer = window.dataLayer || []; dataLayer.push({ ecommerce: null });'
+            . ' dataLayer.push({"pageTitle":"Box","productName":"Box 26 (rund)","productPrice":"33.80","productSku":"pi26","productCurrency":"EUR"});</script>';
+
+        $filtered = $this->filter($html);
+
+        static::assertStringNotContainsString('33.80', $filtered);
+        static::assertStringNotContainsString('productPrice', $filtered);
+        static::assertStringContainsString('"productSku":"pi26"', $filtered);
+        static::assertStringContainsString('dataLayer.push({ ecommerce: null });', $filtered);
+    }
+
+    public function testStripsRemarketingValuesFromAnAssignedPayload(): void
+    {
+        $html = '<script>var google_tag_params = {"ecomm_pagetype":"product","ecomm_prodid":"pi26","ecomm_pvalue":37.8,"ecomm_totalvalue":37.8};</script>';
+
+        $filtered = $this->filter($html);
+
+        static::assertStringNotContainsString('37.8', $filtered);
+        static::assertStringNotContainsString('ecomm_pvalue', $filtered);
+        static::assertStringNotContainsString('ecomm_totalvalue', $filtered);
+        static::assertStringContainsString('"ecomm_prodid":"pi26"', $filtered);
+    }
+
+    public function testBlanksHiddenPriceInputs(): void
+    {
+        $html = '<input type="hidden"' . "\n" . '   name="tracking-product-price"' . "\n" . '   value="37.80">'
+            . '<input type="hidden" name="tracking-product-sku" value="pi26">'
+            . '<input type="number" name="quantity" value="1">';
+
+        $filtered = $this->filter($html);
+
+        static::assertStringNotContainsString('37.80', $filtered);
+        static::assertStringContainsString('name="tracking-product-price"', $filtered);
+        static::assertStringContainsString('<input type="hidden" name="tracking-product-sku" value="pi26">', $filtered);
+        static::assertStringContainsString('<input type="number" name="quantity" value="1">', $filtered);
+    }
+
     public function testLeavesScriptsWithoutItemsUntouched(): void
     {
         $html = '<script>var item_id_hint = 1; var slider = { price: 5, value: 3 };</script>'

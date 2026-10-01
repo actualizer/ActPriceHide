@@ -33,7 +33,7 @@ export default class ActPriceLeakGuardPlugin extends Plugin {
     }
 
     _install(ids, hideAll) {
-        const PRICE_KEYS = ['price', 'value', 'item_price', 'revenue'];
+        const PRICE_KEYS = ['price', 'value', 'item_price', 'revenue', 'productPrice', 'ecomm_pvalue', 'ecomm_totalvalue'];
         const ID_KEYS = ['id', 'item_id', 'product_id', 'sku'];
 
         const state = {

@@ -41,7 +41,16 @@ class InlineTrackingFilterSubscriber implements EventSubscriberInterface
 
     private const OUTER_NUMERIC_KEYS = ['value', 'revenue'];
 
-    private const PRICE_KEYS = ['price', 'value', 'item_price', 'revenue', 'listPrice', 'realPrice', 'item_startPrice'];
+    // Keys that only ever carry a price; they mark a payload even when it has no item.
+    private const PAGE_PRICE_KEYS = ['productPrice', 'ecomm_pvalue', 'ecomm_totalvalue'];
+
+    private const PRICE_KEYS = ['price', 'value', 'item_price', 'revenue', 'listPrice', 'realPrice', 'item_startPrice', ...self::PAGE_PRICE_KEYS];
+
+    private const PRICE_PAYLOAD_REGEX = '/item_id|productPrice|ecomm_pvalue|ecomm_totalvalue/';
+
+    private const PRICE_PAYLOAD_JSON_REGEX = '/"(?:item_id|productPrice|ecomm_pvalue|ecomm_totalvalue)"/';
+
+    private const INPUT_TAG_REGEX = '/<input\b[^<>]*>/i';
 
     private const SCRIPT_REGEX = '/(<script\b[^>]*>)(.*?)(<\/script>)/is';
 
@@ -51,7 +60,7 @@ class InlineTrackingFilterSubscriber implements EventSubscriberInterface
 
     private const LITERAL_ITEM_ID_REGEX = '/(?<![\w"\'$])item_id\s*:/';
 
-    private const LITERAL_PRICE_ENTRY_REGEX = '/(?<![\w"\'$.])(?:price|value|item_price|revenue|listPrice|realPrice|item_startPrice)\s*:\s*(?:\'(?:[^\'\\\\]|\\\\.)*\'|"(?:[^"\\\\]|\\\\.)*"|-?\d+(?:\.\d+)?|null|true|false)\s*,?/';
+    private const LITERAL_PRICE_ENTRY_REGEX = '/(?<![\w"\'$.])(?:price|value|item_price|revenue|listPrice|realPrice|item_startPrice|productPrice|ecomm_pvalue|ecomm_totalvalue)\s*:\s*(?:\'(?:[^\'\\\\]|\\\\.)*\'|"(?:[^"\\\\]|\\\\.)*"|-?\d+(?:\.\d+)?|null|true|false)\s*,?/';
 
     // Re-encoded JSON lands inside <script>: keep "/" escaped and hex-encode <, >, &, ', "
     // so a string value can never close the script element.
@@ -87,10 +96,53 @@ class InlineTrackingFilterSubscriber implements EventSubscriberInterface
         }
 
         $content = (string) $response->getContent();
-        if ($content === '' || !str_contains($content, 'item_id')) {
+        if ($content === '') {
             return;
         }
 
+        $filtered = str_contains($content, 'item_id') ? $this->stripItems($content) : $content;
+
+        // Scripts carrying prices: nested JSON payloads and JS object literals.
+        $result = preg_replace_callback(
+            self::SCRIPT_REGEX,
+            static function (array $match): string {
+                if (preg_match(self::PRICE_PAYLOAD_REGEX, $match[2]) !== 1) {
+                    return $match[0];
+                }
+
+                return $match[1] . self::stripScript($match[2]) . $match[3];
+            },
+            $filtered,
+        );
+        if ($result !== null) {
+            $filtered = $result;
+        }
+
+        // Hidden form fields that hand a price to tracking scripts keep their element, not their value.
+        $result = preg_replace_callback(
+            self::INPUT_TAG_REGEX,
+            static function (array $match): string {
+                if (preg_match('/\stype\s*=\s*["\']?hidden\b/i', $match[0]) !== 1
+                    || preg_match('/\sname\s*=\s*["\']?[^"\'\s>]*price/i', $match[0]) !== 1
+                ) {
+                    return $match[0];
+                }
+
+                return preg_replace('/(\svalue\s*=\s*)(?:"[^"]*"|\'[^\']*\'|[^\s>]+)/i', '$1""', $match[0]) ?? $match[0];
+            },
+            $filtered,
+        );
+        if ($result !== null) {
+            $filtered = $result;
+        }
+
+        if ($filtered !== $content) {
+            $response->setContent($filtered);
+        }
+    }
+
+    private function stripItems(string $content): string
+    {
         // Pass 1 — rewrite each item object, dropping price-bearing keys.
         $filtered = preg_replace_callback(
             self::ITEM_OBJECT_REGEX,
@@ -109,7 +161,7 @@ class InlineTrackingFilterSubscriber implements EventSubscriberInterface
         );
 
         if ($filtered === null) {
-            return;
+            return $content;
         }
 
         // Pass 2 — strip outer "value"/"revenue" totals from each gtag
@@ -141,35 +193,12 @@ class InlineTrackingFilterSubscriber implements EventSubscriberInterface
             }
         }
 
-        // Pass 3 — scripts carrying items: nested JSON payloads and JS object literals.
-        $result = preg_replace_callback(
-            self::SCRIPT_REGEX,
-            static function (array $match): string {
-                if (!str_contains($match[2], 'item_id')) {
-                    return $match[0];
-                }
-
-                return $match[1] . self::stripScript($match[2]) . $match[3];
-            },
-            $filtered,
-        );
-        if ($result !== null) {
-            $filtered = $result;
-        }
-
-        // Pass 4 — price data attributes on elements that describe an item.
-        $result = preg_replace_callback(
+        // Pass 3 — price data attributes on elements that describe an item.
+        return preg_replace_callback(
             self::ITEM_TAG_REGEX,
             static fn (array $match): string => preg_replace(self::PRICE_ATTRIBUTE_REGEX, '', $match[0]) ?? $match[0],
             $filtered,
-        );
-        if ($result !== null) {
-            $filtered = $result;
-        }
-
-        if ($filtered !== $content) {
-            $response->setContent($filtered);
-        }
+        ) ?? $filtered;
     }
 
     private static function stripScript(string $script): string
@@ -195,7 +224,7 @@ class InlineTrackingFilterSubscriber implements EventSubscriberInterface
             }
 
             $candidate = substr($script, $start, $end - $start + 1);
-            $data = str_contains($candidate, '"item_id"') ? json_decode($candidate) : null;
+            $data = preg_match(self::PRICE_PAYLOAD_JSON_REGEX, $candidate) === 1 ? json_decode($candidate) : null;
             if (!$data instanceof \stdClass) {
                 $offset = $start + 1;
                 continue;
