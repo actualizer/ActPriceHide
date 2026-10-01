@@ -8,6 +8,7 @@ A Shopware 6 plugin that provides advanced price visibility control and purchase
 - Close cart, cart mutation and checkout for non-logged-in users
 - Customer group-based price visibility control
 - Information bar display when prices are hidden
+- Price hiding, checkout lockout and the information bar can be switched per sales channel
 - Server-side lockout of every cart and checkout route, including `/checkout/cart.json` and order placement
 - AJAX and normal page request compatibility
 - Multi-language support (German & English)
@@ -114,8 +115,8 @@ bin/console cache:clear
 3. Click "Config" to access plugin settings
 4. Configure customer groups that should see prices
 5. Set up redirect behavior and display options
-6. **Hide prices and checkout** (`ActPriceHide.config.enabled`, per sales channel, default on): switch it off in every sales channel that should behave like a normal shop. Only an explicit boolean "off" opens a channel; a channel without a value stays closed. On the CLI pass `--json` (`system:config:set ActPriceHide.config.enabled false --json -s <salesChannelId>`), otherwise the string `"false"` is stored and the channel stays closed.
-7. **Show notice bar** (`ActPriceHide.config.showNoticeBar`, per sales channel, default on): switch it off where logging in does not unlock prices. Only the bar disappears; prices, cart and checkout stay hidden.
+6. **Hide prices and checkout** (`ActPriceHide.config.enabled`, per sales channel, default on, since v1.4.0): switch it off in every sales channel that should behave like a normal shop. Only an explicit boolean "off" opens a channel; a channel without a value stays closed. On the CLI pass `--json` (`system:config:set ActPriceHide.config.enabled false --json -s <salesChannelId>`), otherwise the string `"false"` is stored and the channel stays closed.
+7. **Show notice bar** (`ActPriceHide.config.showNoticeBar`, per sales channel, default on, since v1.5.0): switch it off where logging in does not unlock prices. Only the bar disappears; prices, cart and checkout stay hidden.
 8. **Show variant selection while prices are hidden** (`ActPriceHide.config.showVariantSelection`, per sales channel, default off): keeps the variant configurator (e.g. colours) on the product page so visitors can browse the variants. Price, delivery information and buy button stay hidden. On the CLI pass `--json`.
 
 ## How it works
