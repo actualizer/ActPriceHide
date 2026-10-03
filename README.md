@@ -82,6 +82,12 @@ Listing, search and suggest pages never displayed prices. Up to v1.6.0, however,
 
 Tracking keys are matched by name. A tracking integration that renders a price under a key not listed here is not covered until that key is added — after installing or updating one, check a product page's source for the product's real price.
 
+## Known limitations
+
+### Store API
+
+The plugin protects the Storefront. Product data returned by the Store API (`/store-api/…`), as used by headless frontends and apps, still contains prices, and the Store API cart and checkout routes are not closed. Do not rely on the plugin to hide prices in a headless sales channel.
+
 ## Requirements
 
 - Shopware 6.7.1 or higher
@@ -190,7 +196,7 @@ The plugin respects Shopware's logging configuration. Check your log files for a
 
 ## Support
 
-For issues and feature requests, please use the GitHub issue tracker.
+For issues and feature requests, please use the GitHub issue tracker. Please report security vulnerabilities privately instead, as described in the [security policy](https://github.com/actualizer/ActPriceHide/security/policy).
 
 ## License
 
