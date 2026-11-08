@@ -81,7 +81,7 @@ class InlineTrackingFilterSubscriber implements EventSubscriberInterface
         }
 
         $hidePrice = $event->getRequest()->attributes->get('hidePrice');
-        if (!is_array($hidePrice) || !($hidePrice['hide'] ?? false)) {
+        if (!is_array($hidePrice) || !(bool) ($hidePrice['hide'] ?? false)) {
             return;
         }
 

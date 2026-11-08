@@ -50,12 +50,12 @@ class StorefrontRenderSubscriber implements EventSubscriberInterface
         // VarDumper-based output was removed because it writes directly into the
         // HTML response and would expose customer-group + hide-price settings
         // if the debug flag were ever toggled in production (price-leak risk).
-        if ($debugMode) {
+        if ((bool) $debugMode) {
             error_log('[ActPriceHide][StorefrontRender] ' . json_encode([
                 'customerGroupId' => $customerGroup->getId(),
                 'customerGroupName' => $customerGroup->getName(),
                 'showPriceCustomerGroups' => $showPriceCustomerGroups,
-                'isEmptyShowPriceCustomerGroups' => empty($showPriceCustomerGroups),
+                'isEmptyShowPriceCustomerGroups' => $showPriceCustomerGroups === [],
                 'isInShowPriceCustomerGroups' => in_array($customerGroup->getId(), $showPriceCustomerGroups, true),
             ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
         }
@@ -65,7 +65,7 @@ class StorefrontRenderSubscriber implements EventSubscriberInterface
         // Set request attributes for all requests (works for both normal and AJAX)
         $hidePrice = [
             'hide' => $this->hidePriceResolver->shouldHide($salesChannelContext),
-            'reason' => $customer ? 'not_allowed' : 'not_logged_in',
+            'reason' => $customer !== null ? 'not_allowed' : 'not_logged_in',
         ];
         
         $request->attributes->set('hidePrice', $hidePrice);
@@ -114,12 +114,12 @@ class StorefrontRenderSubscriber implements EventSubscriberInterface
         $debugMode = $this->systemConfigService->get('ActPriceHide.config.debugMode', $salesChannelContext->getSalesChannelId());
 
         // Log debug info to error_log only if debug mode is enabled (see note above).
-        if ($debugMode) {
+        if ((bool) $debugMode) {
             error_log('[ActPriceHide][AJAX] ' . json_encode([
                 'customerGroupId' => $customerGroup->getId(),
                 'customerGroupName' => $customerGroup->getName(),
                 'showPriceCustomerGroups' => $showPriceCustomerGroups,
-                'isEmptyShowPriceCustomerGroups' => empty($showPriceCustomerGroups),
+                'isEmptyShowPriceCustomerGroups' => $showPriceCustomerGroups === [],
                 'isInShowPriceCustomerGroups' => in_array($customerGroup->getId(), $showPriceCustomerGroups, true),
             ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
         }
@@ -127,7 +127,7 @@ class StorefrontRenderSubscriber implements EventSubscriberInterface
         // Add hidePrice extension to the request attributes and as global twig variable
         $hidePrice = [
             'hide' => $this->hidePriceResolver->shouldHide($salesChannelContext),
-            'reason' => $customer ? 'not_allowed' : 'not_logged_in',
+            'reason' => $customer !== null ? 'not_allowed' : 'not_logged_in',
         ];
         
         $request->attributes->set('hidePrice', $hidePrice);
