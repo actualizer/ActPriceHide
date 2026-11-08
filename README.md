@@ -2,6 +2,11 @@
 
 A Shopware 6 plugin that provides advanced price visibility control and purchase-funnel access management. Hide prices and close cart and checkout for non-logged-in users or specific customer groups.
 
+## Requirements
+
+- Shopware `>=6.7.1 <6.8.0`, tested with 6.7.16.0
+- PHP 8.4 or higher
+
 ## Features
 
 - Hide prices for non-logged-in users
@@ -108,11 +113,6 @@ On every Storefront render, including XHR responses rendered with `renderStorefr
 ```
 
 Leave out price values in `data-*` attributes and JSON as well, not only the visible text.
-
-## Requirements
-
-- Shopware `>=6.7.1 <6.8.0`, tested with 6.7.16.0
-- PHP 8.4 or higher
 
 ## Installation
 
