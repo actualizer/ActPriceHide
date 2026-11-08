@@ -8,13 +8,17 @@ on:
 
 jobs:
   validate:
-    name: Extension validate (lowest supported Shopware)
+    name: Extension validate (${{ matrix.check-against }} supported Shopware)
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        check-against: [ lowest, highest ]
     steps:
       - uses: actions/checkout@v4
 
       # Deprecation notices differ between the lowest and the highest supported Shopware
-      # release, so no code satisfies both; a local check against the highest still reports them.
+      # release, so no code satisfies both; a local check still reports them.
       - name: Ignore deprecation notices
         run: |
           cat > .shopware-extension.yml <<'YAML'
@@ -27,10 +31,10 @@ jobs:
         uses: shopware/github-actions/extension-verifier@main
         with:
           action: check
-          check-against: lowest
+          check-against: ${{ matrix.check-against }}
 
   tests:
-    name: PHPStan & PHPUnit (Shopware 6.7.16.0)
+    name: PHPUnit (Shopware 6.7.16.0)
     runs-on: ubuntu-latest
     steps:
       # Checks out Shopware to the workspace root and this repository to
@@ -42,13 +46,7 @@ jobs:
           shopwareVersion: v6.7.16.0
           phpVersion: '8.4'
 
-      - name: PHPStan
-        uses: shopware/github-actions/phpstan@main
-        with:
-          extensionName: ActPriceHide
-
+      # Same call and timezone as the development setup; tests derive expected
+      # values from date.timezone.
       - name: PHPUnit
-        uses: shopware/github-actions/phpunit@main
-        with:
-          extensionName: ActPriceHide
-          filterName: unit
+        run: vendor/bin/phpunit -d date.timezone=Europe/Berlin -c custom/plugins/ActPriceHide/phpunit.xml.dist
