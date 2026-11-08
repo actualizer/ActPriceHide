@@ -1,0 +1,54 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  validate:
+    name: Extension validate (lowest supported Shopware)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Deprecation notices differ between the lowest and the highest supported Shopware
+      # release, so no code satisfies both; a local check against the highest still reports them.
+      - name: Ignore deprecation notices
+        run: |
+          cat > .shopware-extension.yml <<'YAML'
+          validation:
+            ignore:
+              - message: "deprecated"
+          YAML
+
+      - name: shopware-cli extension validate
+        uses: shopware/github-actions/extension-verifier@main
+        with:
+          action: check
+          check-against: lowest
+
+  tests:
+    name: PHPStan & PHPUnit (Shopware 6.7.16.0)
+    runs-on: ubuntu-latest
+    steps:
+      # Checks out Shopware to the workspace root and this repository to
+      # custom/plugins/ActPriceHide, then installs its composer requirements.
+      - name: Set up Shopware
+        uses: shopware/github-actions/setup-extension@main
+        with:
+          extensionName: ActPriceHide
+          shopwareVersion: v6.7.16.0
+          phpVersion: '8.4'
+
+      - name: PHPStan
+        uses: shopware/github-actions/phpstan@main
+        with:
+          extensionName: ActPriceHide
+
+      - name: PHPUnit
+        uses: shopware/github-actions/phpunit@main
+        with:
+          extensionName: ActPriceHide
+          filterName: unit

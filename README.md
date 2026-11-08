@@ -88,9 +88,31 @@ Tracking keys are matched by name. A tracking integration that renders a price u
 
 The plugin protects the Storefront. Product data returned by the Store API (`/store-api/…`), as used by headless frontends and apps, still contains prices, and the Store API cart and checkout routes are not closed. Do not rely on the plugin to hide prices in a headless sales channel.
 
+### Prices rendered by other extensions
+
+The plugin hides prices in the Shopware core templates listed under [Template Extensions](#template-extensions). An extension that renders prices from its own templates (cross-selling sliders, accessory lists, quick views, …) is not covered automatically. Such an extension has to check the `hidePrice` request attribute described below. After installing one, check its output as a visitor who must not see prices.
+
+### Integration for other extensions
+
+On every Storefront render, including XHR responses rendered with `renderStorefront()`, the plugin sets the request attribute `hidePrice`:
+
+```php
+['hide' => bool, 'reason' => 'not_logged_in' | 'not_allowed']
+```
+
+`hide` is `true` while prices must not reach the current visitor. An extension that outputs prices from its own templates can honour it like this:
+
+```twig
+{% if not (app.request.attributes.get('hidePrice').hide ?? false) %}
+    {{ product.calculatedPrice.totalPrice|currency }}
+{% endif %}
+```
+
+Leave out price values in `data-*` attributes and JSON as well, not only the visible text.
+
 ## Requirements
 
-- Shopware 6.7.1 or higher
+- Shopware `>=6.7.1 <6.8.0`, tested with 6.7.16.0
 - PHP 8.4 or higher
 
 ## Installation

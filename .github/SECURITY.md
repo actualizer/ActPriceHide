@@ -32,4 +32,5 @@ Out of scope:
 
 - Store API responses. The plugin filters the Storefront only; headless or Store API sales channels are not covered.
 - Client-side tracking leaks while the `priceLeakGuardEnabled` setting is switched off.
+- Prices rendered by other extensions from their own templates when that extension does not honour the `hidePrice` request attribute (see "Integration for other extensions" in the README). Please report those to the extension's vendor.
 - Vulnerabilities in Shopware itself. Please report those to Shopware: <https://github.com/shopware/shopware/security/policy>.
