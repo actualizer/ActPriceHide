@@ -12,7 +12,6 @@ A Shopware 6 plugin that provides advanced price visibility control and purchase
 - Server-side lockout of every cart and checkout route, including `/checkout/cart.json` and order placement
 - AJAX and normal page request compatibility
 - Multi-language support (German & English)
-- Compatible with Shopware 6.7.1+
 
 ## Price-Leak Protection
 
@@ -212,8 +211,6 @@ The plugin respects Shopware's logging configuration. Check your log files for a
 
 ## Compatibility
 
-- **Shopware Version**: 6.7.1+
-- **PHP Version**: 8.4+
 - **AJAX Support**: Full compatibility with AJAX requests
 
 ## Support
