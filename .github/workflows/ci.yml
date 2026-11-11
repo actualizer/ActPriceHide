@@ -5,6 +5,9 @@ on:
     branches: [ main ]
   pull_request:
   workflow_dispatch:
+  # Catches breakage from new Shopware releases and advisories without a code change.
+  schedule:
+    - cron: '0 4 * * 1'
 
 jobs:
   validate:
@@ -45,6 +48,8 @@ jobs:
           extensionName: ActPriceHide
           shopwareVersion: v6.7.16.0
           phpVersion: '8.4'
+          # Advisories on Shopware's own dependencies would block this throwaway test install.
+          allow-insecure-versions: 'true'
 
       # The checkout's extension installer would load every installed PHPStan extension;
       # this plugin's standard is its own config plus phpstan-strict-rules only.
