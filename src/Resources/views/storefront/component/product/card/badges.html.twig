@@ -1,0 +1,15 @@
+{% sw_extends '@Storefront/storefront/component/product/card/badges.html.twig' %}
+
+{% block component_product_badges_discount %}
+    {% set hidePrice = false %}
+    {% if app.request.attributes.get('hidePrice') and app.request.attributes.get('hidePrice').hide %}
+        {% set hidePrice = true %}
+    {% elseif page.extensions.hidePrice is defined and page.extensions.hidePrice.hide %}
+        {% set hidePrice = true %}
+    {% endif %}
+
+    {# A saving without a price is not allowed to show, so the badge goes with it. #}
+    {% if not hidePrice %}
+        {{ parent() }}
+    {% endif %}
+{% endblock %}

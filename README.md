@@ -171,6 +171,7 @@ bin/console cache:clear
 The plugin extends multiple templates to ensure consistent price hiding:
 - Product listing pages
 - Product detail pages
+- Discount badge (`component_product_badges_discount`), including those of other extensions that render inside this block; the new and topseller badges stay
 - Search suggestions
 - Header cart button and widget
 - `layout/meta.html.twig` for the head-level dataLayer-guard inline script
