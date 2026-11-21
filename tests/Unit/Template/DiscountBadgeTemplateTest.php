@@ -3,6 +3,7 @@
 namespace Act\PriceHide\Tests\Unit\Template;
 
 use PHPUnit\Framework\TestCase;
+use Shopware\Storefront\Storefront;
 use Symfony\Component\HttpFoundation\Request;
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
@@ -10,7 +11,6 @@ use Twig\TwigFilter;
 
 class DiscountBadgeTemplateTest extends TestCase
 {
-    private const CORE = __DIR__ . '/../../../../../../vendor/shopware/storefront/Resources/views/storefront/component/product/card/badges.html.twig';
     private const OVERRIDE = __DIR__ . '/../../../src/Resources/views/storefront/component/product/card/badges.html.twig';
 
     public function testDiscountBadgeStaysVisibleWhenPricesAreVisible(): void
@@ -44,6 +44,19 @@ class DiscountBadgeTemplateTest extends TestCase
     }
 
     /**
+     * Located through the Storefront bundle class, so it works with Shopware installed
+     * as a package (vendor/shopware/storefront) and as a source checkout (src/Storefront).
+     */
+    private static function coreTemplate(): string
+    {
+        $bundleDir = \dirname((string) (new \ReflectionClass(Storefront::class))->getFileName());
+        $path = $bundleDir . '/Resources/views/storefront/component/product/card/badges.html.twig';
+        static::assertFileExists($path);
+
+        return (string) file_get_contents($path);
+    }
+
+    /**
      * @param array<string, mixed> $page
      */
     private function render(Request $request, array $page = []): string
@@ -52,7 +65,7 @@ class DiscountBadgeTemplateTest extends TestCase
         $override = (string) preg_replace("/sw_extends '[^']+'/", "extends 'core'", $override);
 
         $twig = new Environment(new ArrayLoader([
-            'core' => (string) file_get_contents(self::CORE),
+            'core' => self::coreTemplate(),
             'override' => $override,
         ]));
         $twig->addFilter(new TwigFilter('trans', static fn (string $s): string => $s));
