@@ -35,6 +35,9 @@ jobs:
         with:
           action: check
           check-against: ${{ matrix.check-against }}
+          # Formatting checks are on by default since shopware-cli 0.21 and are not
+          # adopted by this plugin yet.
+          exclude: php-cs-fixer,prettier
 
   tests:
     name: PHPStan & PHPUnit (Shopware 6.7.16.0)
